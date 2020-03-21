@@ -620,7 +620,7 @@ const renderCounters = stats => {
   const addCounter = (value, name) => {
     counters.append(`<div class="countdown">
     <div class="clock-count-container">
-      <h1 class="clock-val">${value}</h1>
+      <h1 class="clock-val">${numberWithCommas(value)}</h1>
     </div>
     <h4 class="clock-text">${name}</h4>
   </div>`);
@@ -645,7 +645,7 @@ const updateSelectedCountryCharts = country => {
 
   const generateStat = (idx, text, val, percent) => {
     $(`.stat-title-${idx}`).html(text);
-    $(`.stat-count-${idx}`).html(val);
+    $(`.stat-count-${idx}`).html(numberWithCommas(val));
     $(`.stat-progress-${idx}`).css("width", `${percent}%`);
   };
 
