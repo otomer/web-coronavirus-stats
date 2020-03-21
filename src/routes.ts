@@ -21,9 +21,6 @@ const setRoute = (path: string, data: Function) =>
 let scmp = {};
 setRoute("/scmp", () => scmp);
 
-let countries = {};
-setRoute("/countries", () => countries);
-
 //Helpers
 const cronDataInterval = (cb: Function, refreshMilliseconds?: number) => {
   if (refreshMilliseconds) {
