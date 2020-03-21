@@ -1,7 +1,7 @@
 {
   "author": "o.tomerr@gmail.com",
   "bugs": {
-    "url": "https://github.com/otomer/web-coronavirus/issues"
+    "url": "https://github.com/otomer/web-coronavirus-stats/issues"
   },
   "dependencies": {
     "@types/express": "^4.17.3",
@@ -22,7 +22,7 @@
     "node": ">=12.0.0",
     "npm": ">=6.0.0"
   },
-  "homepage": "https://github.com/otomer/web-coronavirus#readme",
+  "homepage": "https://github.com/otomer/web-coronavirus-stats#readme",
   "keywords": [
     "coronavirus",
     "epidemic",
@@ -31,10 +31,10 @@
   ],
   "license": "ISC",
   "main": "server.js",
-  "name": "web-coronavirus",
+  "name": "web-coronavirus-stats",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/otomer/web-coronavirus.git"
+    "url": "git+https://github.com/otomer/web-coronavirus-stats.git"
   },
   "scripts": {
     "build": "tsc",
