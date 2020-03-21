@@ -10,6 +10,19 @@ Lean more about
 
 <a href="https://ibb.co/TBjvFdN"><img src="https://i.ibb.co/wNG0xj2/screencapture-coronavirus-epidemic-2020-03-21-20-48-36.png" alt="screencapture-coronavirus-epidemic-2020-03-21-20-48-36" border="0"></a>
 
+## Technologies Used
+
+### Backend:
+
+- TypeScript
+- Node.js
+
+### Frontend:
+
+- JavaScript
+- jQuery
+- HTML / CSS
+
 ## Installation
 
 1. Clone this repository:
