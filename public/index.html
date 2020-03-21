@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta
+      content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no"
+      name="viewport"
+    />
+    <title>Coronavirus Epidemic (COVID-19)</title>
+    <link href="assets/img/favicon.ico" rel="icon" type="image/x-icon" />
+    <link href="assets/css/loader.css" rel="stylesheet" type="text/css" />
+
+    <!-- BEGIN GLOBAL MANDATORY STYLES -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Quicksand:400,500,600,700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="bootstrap/css/bootstrap.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link href="assets/css/plugins.css" rel="stylesheet" type="text/css" />
+    <!-- END GLOBAL MANDATORY STYLES -->
+
+    <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM STYLES -->
+    <link href="plugins/apex/apexcharts.css" rel="stylesheet" type="text/css" />
+    <link
+      href="assets/css/dashboard/dash_2.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
+
+    <!-- BEGIN PAGE LEVEL STYLES -->
+    <link
+      href="plugins/table/datatable/datatables.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="plugins/table/datatable/dt-global_style.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <!-- END PAGE LEVEL STYLES -->
+    <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM STYLES -->
+    <link href="plugins/apex/apexcharts.css" rel="stylesheet" type="text/css" />
+    <link
+      href="assets/css/dashboard/dash_1.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
+    <!-- BEGIN PAGE LEVEL STYLES -->
+    <link href="assets/css/scrollspyNav.css" rel="stylesheet" type="text/css" />
+    <link
+      href="plugins/jvector/jquery-jvectormap-2.0.3.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <!-- END PAGE LEVEL STYLES -->
+    <style>
+      .loader {
+        background: #060818;
+        text-align: center;
+      }
+      .jvectormap-container {
+        border-radius: 14px;
+        padding: 20px 0;
+      }
+      .jvectormap-zoomin,
+      .jvectormap-zoomout,
+      .jvectormap-goback {
+        left: 20px;
+        border-radius: 50%;
+        background: #ffffff;
+        padding: 6px 6px;
+        color: #3b3f5c;
+        border: 2px solid #3b3f5c;
+        font-size: 19px;
+        font-weight: 700;
+        top: 20px;
+      }
+      .jvectormap-zoomout {
+        top: 20px;
+        left: 50px;
+      }
+    </style>
+
+    <link
+      href="assets/css/components/custom-countdown.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+  </head>
+  <body class="alt-menu sidebar-noneoverflow">
+    <!-- BEGIN LOADER -->
+    <div id="load_screen">
+      <div class="loader">
+        <div class="loader-content">
+          <svg
+            version="1.1"
+            id="L7"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            x="0px"
+            y="0px"
+            viewBox="0 0 100 100"
+            enable-background="new 0 0 100 100"
+            xml:space="preserve"
+          >
+            <path
+              fill="#fff"
+              d="M31.6,3.5C5.9,13.6-6.6,42.7,3.5,68.4c10.1,25.7,39.2,38.3,64.9,28.1l-3.1-7.9c-21.3,8.4-45.4-2-53.8-23.3
+c-8.4-21.3,2-45.4,23.3-53.8L31.6,3.5z"
+            >
+              <animateTransform
+                attributeName="transform"
+                attributeType="XML"
+                type="rotate"
+                dur="2s"
+                from="0 50 50"
+                to="360 50 50"
+                repeatCount="indefinite"
+              />
+            </path>
+            <path
+              fill="#fff"
+              d="M42.3,39.6c5.7-4.3,13.9-3.1,18.1,2.7c4.3,5.7,3.1,13.9-2.7,18.1l4.1,5.5c8.8-6.5,10.6-19,4.1-27.7
+c-6.5-8.8-19-10.6-27.7-4.1L42.3,39.6z"
+            >
+              <animateTransform
+                attributeName="transform"
+                attributeType="XML"
+                type="rotate"
+                dur="1s"
+                from="0 50 50"
+                to="-360 50 50"
+                repeatCount="indefinite"
+              />
+            </path>
+            <path
+              fill="#fff"
+              d="M82,35.7C74.1,18,53.4,10.1,35.7,18S10.1,46.6,18,64.3l7.6-3.4c-6-13.5,0-29.3,13.5-35.3s29.3,0,35.3,13.5
+L82,35.7z"
+            >
+              <animateTransform
+                attributeName="transform"
+                attributeType="XML"
+                type="rotate"
+                dur="2s"
+                from="0 50 50"
+                to="360 50 50"
+                repeatCount="indefinite"
+              />
+            </path>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <!--  END LOADER -->
+
+    <!--  BEGIN MAIN CONTAINER  -->
+    <div class="main-container" id="container">
+      <div class="overlay"></div>
+      <div class="search-overlay"></div>
+
+      <!--  BEGIN CONTENT PART  -->
+      <div class="main-content" id="content">
+        <div class="layout-px-spacing">
+          <div class="page-header">
+            <div class="page-title">
+              <h3>Coronavirus (COVID-19)</h3>
+            </div>
+          </div>
+
+          <!-- ******** -->
+          <!-- Counters -->
+          <!-- ******** -->
+          <div class="row layout-top-spacing">
+            <div
+              class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing"
+              style="padding-bottom: 0;"
+            >
+              <div class="widget" id="cd-simple"></div>
+            </div>
+          </div>
+          <div class="row layout-top-spacing">
+            <!-- ***************************** -->
+            <!-- World Impact so far Pie Chart -->
+            <!-- ***************************** -->
+            <div
+              class="col-xl-3 col-lg-4 col-md-12 col-sm-12 col-12 layout-spacing"
+            >
+              <div class="widget widget-chart-two">
+                <div class="widget-heading">
+                  <h5 class="">🌍 World Impact So Far</h5>
+                </div>
+                <div class="widget-content">
+                  <div class="" id="worldImpactPie"></div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="col-xl-9 col-lg-8 col-md-12 col-sm-12 col-12 layout-spacing"
+            >
+              <div class="widget widget-chart-one">
+                <div class="widget-heading">
+                  <h5 class="">📈 Impact Over Time</h5>
+                  <ul class="tabs tab-pills">
+                    <li>
+                      <a class="tabmenu" href="javascript:void(0);" id="tb_1"
+                        >Daily</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="widget-content">
+                  <div class="tabs tab-content">
+                    <div class="tabcontent" id="content_1">
+                      <div id="mainGraph"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ********************** -->
+          <!-- Impact Over Time Graph -->
+          <!-- ********************** -->
+
+          <div class="row" id="cancel-row">
+            <!-- *********************** -->
+            <!-- Selected Country Charts -->
+            <!-- *********************** -->
+            <div
+              class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing"
+            >
+              <div id="selectedCountryCharts" class="widget-four">
+                <div class="widget-heading">
+                  <h5 class="country-name"></h5>
+                </div>
+                <div class="widget-content">
+                  <div class="vistorsBrowser" id="mainStats">
+                    <div class="browser-list">
+                      <div class="w-icon">
+                        <svg
+                          class="feather feather-activity"
+                          fill="none"
+                          height="24"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          width="24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <polyline
+                            points="22 12 18 12 15 21 9 3 6 12 2 12"
+                          ></polyline>
+                        </svg>
+                      </div>
+                      <div class="w-browser-details">
+                        <div class="w-browser-info">
+                          <h6 class="stat-title-1">Cases</h6>
+                          <p class="stat-count-1 browser-count"></p>
+                        </div>
+                        <div class="w-browser-stats">
+                          <div class="progress">
+                            <div
+                              aria-valuemax="100"
+                              aria-valuemin="0"
+                              aria-valuenow="90"
+                              class="stat-progress-1 progress-bar bg-gradient-primary"
+                              role="progressbar"
+                              style="width: 0%"
+                            ></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="browser-list">
+                      <div class="w-icon">
+                        <svg
+                          class="feather feather-alert-circle"
+                          fill="none"
+                          height="24"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          width="24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <circle cx="12" cy="12" r="10"></circle>
+                          <line x1="12" x2="12" y1="8" y2="12"></line>
+                          <line x1="12" x2="12.01" y1="16" y2="16"></line>
+                        </svg>
+                      </div>
+                      <div class="w-browser-details">
+                        <div class="w-browser-info">
+                          <h6 class="stat-title-2">Deaths</h6>
+                          <p class="stat-count-2 browser-count"></p>
+                        </div>
+                        <div class="w-browser-stats">
+                          <div class="progress">
+                            <div
+                              aria-valuemax="100"
+                              aria-valuemin="0"
+                              aria-valuenow="90"
+                              class="stat-progress-2 progress-bar bg-gradient-danger"
+                              role="progressbar"
+                              style="width: 0%"
+                            ></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="browser-list">
+                      <div class="w-icon">
+                        <svg
+                          class="feather feather-check"
+                          fill="none"
+                          height="24"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          width="24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                      </div>
+                      <div class="w-browser-details">
+                        <div class="w-browser-info">
+                          <h6 class="stat-title-3">Recovered</h6>
+                          <p class="stat-count-3 browser-count"></p>
+                        </div>
+                        <div class="w-browser-stats">
+                          <div class="progress">
+                            <div
+                              aria-valuemax="100"
+                              aria-valuemin="0"
+                              aria-valuenow="90"
+                              class="stat-progress-3 progress-bar bg-gradient-success"
+                              role="progressbar"
+                              style="width: 0%"
+                            ></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="browser-list">
+                      <div class="w-icon">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="feather feather-users"
+                        >
+                          <path
+                            d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"
+                          ></path>
+                          <circle cx="9" cy="7" r="4"></circle>
+                          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                      </div>
+                      <div class="w-browser-details">
+                        <div class="w-browser-info">
+                          <h6 class="stat-title-4">Overall Impacted</h6>
+                          <p class="stat-count-4 browser-count"></p>
+                        </div>
+                        <div class="w-browser-stats">
+                          <div class="progress">
+                            <div
+                              aria-valuemax="100"
+                              aria-valuemin="0"
+                              aria-valuenow="90"
+                              class="stat-progress-4 progress-bar bg-gradient-warning"
+                              role="progressbar"
+                              style="width: 0%"
+                            ></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- *********************** -->
+            <!-- World Map -->
+            <!-- *********************** -->
+            <div
+              class="col-xl-8 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing"
+            >
+              <div id="world-map" style="height: 460px"></div>
+            </div>
+
+            <!-- *************** -->
+            <!-- Countries Table -->
+            <!-- *************** -->
+            <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
+              <div class="widget-content widget-content-area br-6">
+                <div class="table-responsive mb-4 mt-4">
+                  <table
+                    class="table table-hover"
+                    id="countriesTable"
+                    style="width:100%"
+                  >
+                    <thead>
+                      <tr>
+                        <th>Flag</th>
+                        <th>Country</th>
+                        <th>Code</th>
+                        <th>Impact</th>
+                        <th>Cases</th>
+                        <th></th>
+                        <th>Deaths</th>
+                        <th></th>
+                        <th>Recovered</th>
+                        <th></th>
+                        <th>Cases/1M</th>
+                        <th>Critical</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot>
+                      <tr>
+                        <th>Flag</th>
+                        <th>Country</th>
+                        <th>Code</th>
+                        <th>Impact</th>
+                        <th>Cases</th>
+                        <th></th>
+                        <th>Deaths</th>
+                        <th></th>
+                        <th>Recovered</th>
+                        <th></th>
+                        <th>Cases/1M</th>
+                        <th>Critical</th>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="footer-wrapper">
+            <div class="footer-section f-section-1">
+              <p class="">
+                Copyright © 2020 , All rights reserved.
+              </p>
+            </div>
+            <div class="footer-section f-section-2">
+              <p class="">
+                Coded with
+                <svg
+                  class="feather feather-heart"
+                  fill="none"
+                  height="24"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                  ></path>
+                </svg>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--  END CONTENT PART  -->
+    </div>
+    <!-- END MAIN CONTAINER -->
+
+    <!-- BEGIN GLOBAL MANDATORY SCRIPTS -->
+    <script src="assets/js/libs/jquery-3.1.1.min.js"></script>
+    <script src="bootstrap/js/popper.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="plugins/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script>
+      $(document).ready(function() {
+        App.init();
+      });
+    </script>
+    <script src="assets/js/countries/countries.js"></script>
+
+    <script src="assets/js/custom.js"></script>
+    <!-- END GLOBAL MANDATORY SCRIPTS -->
+
+    <!-- other -->
+    <script src="assets/js/index.js"></script>
+
+    <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
+    <script src="plugins/apex/apexcharts.min.js"></script>
+    <!-- <script src="assets/js/dashboard/dash_2.js"></script> -->
+    <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
+
+    <!-- BEGIN PAGE LEVEL SCRIPTS -->
+    <script src="plugins/table/datatable/datatables.js"></script>
+    <!-- END PAGE LEVEL SCRIPTS -->
+
+    <!-- BEGIN PAGE LEVEL PLUGINS -->
+    <!-- <script src="assets/js/scrollspyNav.js"></script> -->
+    <script src="plugins/jvector/jquery-jvectormap-2.0.3.min.js"></script>
+    <script src="plugins/jvector/africa/jquery-jvectormap-africa-en.js"></script>
+    <script src="plugins/jvector/asia/jquery-jvectormap-asia-en.js"></script>
+    <script src="plugins/jvector/continents/jquery-jvectormap-continents-en.js"></script>
+    <script src="plugins/jvector/europe/jquery-jvectormap-europe-en.js"></script>
+    <script src="plugins/jvector/north_america/jquery-jvectormap-north-america-en.js"></script>
+    <script src="plugins/jvector/oceania/jquery-jvectormap-oceanina-en.js"></script>
+    <script src="plugins/jvector/south-america/jquery-jvectormap-south-america-en.js"></script>
+    <script src="plugins/jvector/worldmap_script/jquery-jvectormap-world-mill-en.js"></script>
+    <!-- END PAGE LEVEL PLUGINS -->
+    <!--  BEGIN CUSTOM SCRIPTS FILE  -->
+    <script src="plugins/jvector/jvector_script.js"></script>
+    <!--  END CUSTOM SCRIPTS FILE  -->
+  </body>
+</html>
