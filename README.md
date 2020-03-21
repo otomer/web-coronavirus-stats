@@ -1,4 +1,4 @@
-# [Coronavirus disease (COVID-2019) reports](http://coronavirus-epidemic.com/) &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/otomer/web-coronavirus/blob/master/LICENSE) [![Website http://coronavirus-epidemic.com](https://img.shields.io/website-up-down-green-red/http/coronavirus-epidemic.com.svg)](http://coronavirus-epidemic.com)
+# [Coronavirus disease (COVID-2019) reports](http://coronavirus-epidemic.com/) &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/otomer/web-coronavirus-stats/blob/master/LICENSE) [![Website http://coronavirus-epidemic.com](https://img.shields.io/website-up-down-green-red/http/coronavirus-epidemic.com.svg)](http://coronavirus-epidemic.com)
 
 Live statistics and coronavirus news tracking the number of confirmed cases, recovered patients, and death toll by country due to the COVID 19 coronavirus 2019–20 from Wuhan, China. Coronavirus counter with new cases, historical data, and info. Daily charts, graphs, news and updates
 
@@ -15,13 +15,13 @@ Lean more about
    Using SSH:
 
    ```
-   git clone git@github.com:otomer/web-coronavirus.git
+   git clone git@github.com:otomer/web-coronavirus-stats.git
    ```
 
    Or using HTTPS:
 
    ```
-   git clone https://github.com/otomer/web-coronavirus.git
+   git clone https://github.com/otomer/web-coronavirus-stats.git
    ```
 
 2) Install all the dependencies listed within `package.json` in the local `node_modules` folder:
