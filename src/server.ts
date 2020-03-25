@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const secure = require("express-force-https");
 import logger = require("morgan");
 
 import { Request, Response } from "express";
@@ -23,6 +24,7 @@ app.use(logger("dev"));
 app.use(express.static("public")); // Static files configuration
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json()); // Support JSON bodies
+app.use(secure);
 
 // _____________________________________________________
 // Routes

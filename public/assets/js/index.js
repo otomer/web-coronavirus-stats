@@ -1,15 +1,18 @@
 $(document).ready(function() {
+  // URL Params
+  var countryCode = getUrlVars()["cc"];
+
+  // DOM
+  var title = $("#topTitle");
+
   window.pageData = {
     geoip: {},
     scmp: {},
     timeseries: {},
     scmpCountries: {},
+    country: {},
     mostImpactedCountry: null
   };
-
-  $("body").on("map-selectRegion", function(event, countryCode) {
-    updateSelectedCountryCharts(pageData.scmpCountries[countryCode]);
-  });
 
   /*
   Components 
@@ -21,15 +24,41 @@ $(document).ready(function() {
     6. #countriesTable        (Countries table)
   */
 
-  fetchGeoip()
-    .then(res => handleGeoipResponse(res, pageData))
-    .then(fetchScmp)
-    .then(res => handleScmpResponse(res, pageData))
-    .then(fetchTimeseries)
-    .then(res => handleTimeseriesResponse(res, pageData))
-    .then(() => {
-      console.log(pageData);
+  if (countryCode) {
+    window.render.loaded();
+
+    fetchCountry(countryCode)
+      .then(res => handleCountryResponse(res, pageData))
+      .catch(res => {
+        window.location = "/";
+      })
+      .then(() => {
+        title.html(`${pageData.country.country} ${pageData.country.flag} `);
+
+        window.render.counters([
+          {
+            value: pageData.country.cases,
+            title: "Cases"
+          },
+          { value: pageData.country.critical, title: "Critical" },
+          { value: pageData.country.deaths, title: "Deaths" }
+        ]);
+      });
+  } else {
+    $("body").on("map-selectRegion", function(event, countryCode) {
+      updateSelectedCountryCharts(pageData.scmpCountries[countryCode]);
     });
+
+    fetchGeoip()
+      .then(res => handleGeoipResponse(res, pageData))
+      .then(fetchScmp)
+      .then(res => handleScmpResponse(res, pageData))
+      .then(fetchTimeseries)
+      .then(res => handleTimeseriesResponse(res, pageData))
+      .then(() => {
+        console.log(pageData);
+      });
+  }
 });
 
 /*
@@ -52,7 +81,7 @@ const fetchTimeseries = () =>
   $.getJSON("https://pomber.github.io/covid19/timeseries.json");
 
 const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
-  loaded();
+  window.render.loaded();
   pageData.timeseries = timeseriesResponse;
 
   const mapByDate = {};
@@ -62,7 +91,13 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
   const seriesRecovered = [];
   const seriesLabels = [];
 
-  renderCounters(pageData.scmp.data.stats);
+  window.render.counters([
+    { value: pageData.scmp.data.stats.todayDeaths, title: "Today Deaths" },
+    { value: pageData.scmp.data.stats.todayCases, title: "Today Cases" },
+    { value: pageData.scmp.data.stats.critical, title: "Critical" },
+    { value: pageData.scmp.data.stats.deaths, title: "Deaths" },
+    { value: pageData.scmp.data.stats.cases, title: "Cases" }
+  ]);
 
   //Iterate countries
   for (let countryName in timeseriesResponse) {
@@ -375,8 +410,8 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
   let maxCasesNormalized;
 
   countries.forEach((value, index, array) => {
-    value.flag = countriesModule.flag(value.country);
-    value.code = countriesModule.code(value.country);
+    value.flag = value.flag;
+    value.code = value.code;
     value.altName = countriesModule.name(value.code);
 
     if (!pageData.mostImpactedCountry) {
@@ -432,7 +467,7 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
     tableRows += `
   <tr>
     <td class="flag-emoji">${value.flag || "-"}</td>
-    <td>${value.country}</td>
+    <td><a href="?cc=${value.code}">${value.country}</a></td>
     <td>${value.code || "-"}</td>
     <td>
       <div class="progress br-30">
@@ -489,11 +524,11 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
       type: "donut",
       width: 380
     },
-    colors: ["#1b55e2", "#3cba92", "#e7515a", "#e2a03f"], //purple, green, red, orange
+    colors: ["#1b55e2", "#3cba92", "#e2a03f", "#e7515a"], //purple, green, red, orange
     dataLabels: {
       enabled: false
     },
-    labels: ["Cases", "Recovered", "Deaths"],
+    labels: ["Cases", "Recovered", "Unresolved", "Deaths"],
     legend: {
       fontSize: "14px",
       horizontalAlign: "center",
@@ -583,6 +618,7 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
     series: [
       pageData.scmp.data.stats.cases,
       pageData.scmp.data.stats.recovered,
+      pageData.scmp.data.stats.unresolved,
       pageData.scmp.data.stats.deaths
     ],
     stroke: {
@@ -598,7 +634,15 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
   );
   worldImpactPie.render();
 };
-
+/*
+=================================
+Get Country Data
+=================================
+*/
+const fetchCountry = cc => $.getJSON(`/country/${cc}`);
+const handleCountryResponse = (countryResponse, pageData) => {
+  pageData.country = countryResponse.data;
+};
 /*
 =================================
 Get GeoIP Data
@@ -612,24 +656,6 @@ const fetchGeoip = () =>
 
 const handleGeoipResponse = (geoipResponse, pageData) => {
   pageData.geoip = geoipResponse;
-};
-
-const renderCounters = stats => {
-  const counters = $("#cd-simple");
-
-  const addCounter = (value, name) => {
-    counters.append(`<div class="countdown">
-    <div class="clock-count-container">
-      <h1 class="clock-val">${numberWithCommas(value)}</h1>
-    </div>
-    <h4 class="clock-text">${name}</h4>
-  </div>`);
-  };
-  addCounter(stats.todayDeaths, "Today Deaths");
-  addCounter(stats.todayCases, "Today Cases");
-  addCounter(stats.critical, "Critical");
-  addCounter(stats.deaths, "Deaths");
-  addCounter(stats.cases, "Cases");
 };
 
 const updateSelectedCountryCharts = country => {
@@ -683,41 +709,4 @@ const updateSelectedCountryCharts = country => {
   ].forEach((value, index) =>
     generateStat(index + 1, value.title, value.amount, value.percent)
   );
-};
-
-/*
-=================================
-Format date as datetime string
-=================================
-*/
-const formatDate = date => {
-  var hours = date.getHours();
-  var minutes = date.getMinutes();
-  var ampm = hours >= 12 ? "pm" : "am";
-  hours = hours % 12;
-  hours = hours ? hours : 12; // the hour '0' should be '12'
-  minutes = minutes < 10 ? "0" + minutes : minutes;
-  var strTime = hours + ":" + minutes + " " + ampm;
-  return `${date.getMonth() +
-    1}/${date.getDate()}/${date.getFullYear()} ${strTime}`;
-};
-
-/*
-=================================
-Numbers Formatting
-=================================
-*/
-const numberWithCommas = x =>
-  x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-const parseCommaNumber = x => parseInt(parseFloat(x.replace(/,/g, "")));
-
-/*
-=================================
-Hide page loader
-=================================
-*/
-const loaded = () => {
-  var load_screen = document.getElementById("load_screen");
-  document.body.removeChild(load_screen);
 };

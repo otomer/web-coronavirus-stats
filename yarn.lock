@@ -292,6 +292,11 @@ cookie@0.4.0:
   resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.4.0.tgz#beb437e7022b3b6d49019d088665303ebe9c14ba"
   integrity sha512-+Hp8fLp57wnUSt0tY0tHEXh4voZRDnoIrZPqlo3DPiI4y9lwg/jqx+1Om94/W6ZaPDOUbnjOt/99w66zk+l1Xg==
 
+country-emoji@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/country-emoji/-/country-emoji-1.5.0.tgz#5140f82fea49ed7e5c65c6e336c5a7fb878f2a87"
+  integrity sha512-aLAFkrOR0mp1+Moi/G282smnAm3hybQOkhnu5e3NR1pj/LclN2qaJlcQ1zK0K6pQmRBdkddgVboeEa5UIU/Wcg==
+
 create-error-class@^3.0.0:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/create-error-class/-/create-error-class-3.0.2.tgz#06be7abef947a3f14a30fd610671d401bca8b7b6"
@@ -403,6 +408,11 @@ execa@^0.7.0:
     p-finally "^1.0.0"
     signal-exit "^3.0.0"
     strip-eof "^1.0.0"
+
+express-force-https@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/express-force-https/-/express-force-https-1.0.0.tgz#2adb8121a6894616fc78ea05b15bd8d4b855fd0c"
+  integrity sha1-KtuBIaaJRhb8eOoFsVvY1LhV/Qw=
 
 express@^4.17.1:
   version "4.17.1"
