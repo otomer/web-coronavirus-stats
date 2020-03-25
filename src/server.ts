@@ -25,16 +25,6 @@ app.use(express.static("public")); // Static files configuration
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json()); // Support JSON bodies
 
-app.use(function(req: any, res: any, next: any) {
-  if (req.secure) {
-    // request was via https, so do no special handling
-    next();
-  } else {
-    // request was via http, so redirect to https
-    res.redirect("https://" + req.headers.host + req.url);
-  }
-});
-
 // _____________________________________________________
 // Routes
 
