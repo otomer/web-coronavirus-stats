@@ -16,7 +16,6 @@ $(document).ready(function() {
 
   if (countryCode) {
     $(".specific-row").hide();
-    window.render.loaded();
 
     fetchCountry(countryCode)
       .then(res => handleCountryResponse(res, pageData))
@@ -24,6 +23,7 @@ $(document).ready(function() {
         window.location = "/";
       })
       .then(() => {
+        window.render.loaded();
         title.html(`${pageData.country.country} ${pageData.country.flag} `);
 
         window.render.counters([
