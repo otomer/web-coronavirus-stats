@@ -12,7 +12,9 @@
     };
 
     stats.forEach(function(v, i, arr) {
-      addCounter(v.value, v.title);
+      if (v.value >= 0) {
+        addCounter(v.value, v.title);
+      }
     });
   };
   if (!window.render) {

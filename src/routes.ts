@@ -84,6 +84,8 @@ cronDataInterval(
         );
 
         const extraStats = {
+          countriesImpacted: 0,
+          countriesDeaths: 0,
           active: 0,
           critical: 0,
           todayDeaths: 0,
@@ -112,7 +114,8 @@ cronDataInterval(
           value.deaths = parseCommaNumber(value.deaths);
           value.recovered = parseCommaNumber(value.recovered);
           value.unresolved = value.cases - value.deaths - value.recovered;
-
+          extraStats.countriesImpacted += value.cases > 0 ? 1 : 0;
+          extraStats.countriesDeaths += value.deaths > 0 ? 1 : 0;
           if (value.country.indexOf("*") !== -1) {
             value.country = value.country.split("*").join("");
           }
