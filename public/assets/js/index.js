@@ -1,6 +1,6 @@
 $(document).ready(function() {
   // URL Params
-  var countryCode = getUrlVars()["cc"];
+  var countryCode = getUrlVars()["country"];
 
   // DOM
   var title = $("#topTitle");
@@ -14,17 +14,8 @@ $(document).ready(function() {
     mostImpactedCountry: null
   };
 
-  /*
-  Components 
-    1. #cd-simple             (Top Counters)
-    2. #worldImpactPie        (World impact so far pie chart)
-    3. #mainGraph             (Graph for Impact over time)
-    4. #selectedCountryCharts (Charts for selected country)
-    5. #world-map             (World map)
-    6. #countriesTable        (Countries table)
-  */
-
   if (countryCode) {
+    $(".specific-row").hide();
     window.render.loaded();
 
     fetchCountry(countryCode)
@@ -41,30 +32,65 @@ $(document).ready(function() {
             title: "Cases"
           },
           { value: pageData.country.critical, title: "Critical" },
-          { value: pageData.country.deaths, title: "Deaths" }
+          { value: pageData.country.deaths, title: "Deaths" },
+          { value: pageData.country.fatalityRate, title: "Fatality Rate" }
         ]);
-
-        const graphOptions = {
+        const tsGraphDays = 20;
+        const tsGraph = selectLast(pageData.country.timeseries, tsGraphDays);
+        window.render.graph({
+          title: `Impact over time (Last ${tsGraphDays} Days)`,
           colors: ["#1b55e2", "#e7515a", "#3cba92"],
           series: [
             {
-              data: pageData.country.timeseries.map(c => c.confirmed),
+              data: tsGraph.map(c => c.confirmed),
               name: "Cases"
             },
             {
-              data: pageData.country.timeseries.map(c => c.deaths),
+              data: tsGraph.map(c => c.deaths),
               name: "Deaths"
             },
             {
-              data: pageData.country.timeseries.map(c => c.recovered),
+              data: tsGraph.map(c => c.recovered),
               name: "Recovered"
             }
           ],
-          labels: pageData.country.timeseries.map(c => c.date)
-        };
-        window.render.graph(graphOptions);
+          labels: tsGraph.map(c => c.date)
+        });
+
+        window.render.piechart({
+          title: "Impact so far",
+          labels: ["Cases", "Recovered", "Unresolved", "Deaths"],
+          colors: ["#1b55e2", "#3cba92", "#e2a03f", "#e7515a"],
+          series: [
+            pageData.country.cases,
+            pageData.country.recovered,
+            pageData.country.unresolved,
+            pageData.country.deaths
+          ]
+        });
+
+        const tsPiechartDays = 7;
+        const tsPiechart = selectLast(
+          pageData.country.timeseries,
+          tsPiechartDays
+        );
+        window.render.chart({
+          title: `Deaths vs. Recovered (Last ${tsPiechartDays} Days)`,
+          categories: tsPiechart.map(c => c.date),
+          series: [
+            {
+              name: "Deaths",
+              data: tsPiechart.map(c => c.deaths)
+            },
+            {
+              name: "Recovered",
+              data: tsPiechart.map(c => c.recovered)
+            }
+          ]
+        });
       });
   } else {
+    $(".specific-row").show();
     $("body").on("map-selectRegion", function(event, countryCode) {
       updateSelectedCountryCharts(pageData.scmpCountries[countryCode]);
     });
@@ -76,7 +102,7 @@ $(document).ready(function() {
       .then(fetchTimeseries)
       .then(res => handleTimeseriesResponse(res, pageData))
       .then(() => {
-        console.log(pageData);
+        window.log = () => console.log(pageData);
       });
   }
 });
@@ -119,13 +145,16 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
     { value: pageData.scmp.data.stats.cases, title: "Cases" },
     {
       value: pageData.scmp.data.stats.countriesDeaths,
-      title: "Countries with losses"
+      title: "Countries +Deaths"
     },
     {
       value: pageData.scmp.data.stats.countriesImpacted,
-      title: "Countries with cases"
+      title: "Countries +Cases"
     }
   ]);
+
+  timeseriesResponse["United States"] = timeseriesResponse["US"];
+  delete timeseriesResponse["US"];
 
   //Iterate countries
   for (let countryName in timeseriesResponse) {
@@ -176,24 +205,25 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
     seriesDeaths.push(mapByDate[mapByDateKeys[i]].deaths);
     seriesRecovered.push(mapByDate[mapByDateKeys[i]].recovered);
   }
-
+  const lastGraphItems = 25;
   const graphOptions = {
+    title: `Impact over time (Last ${lastGraphItems} Days)`,
     colors: ["#1b55e2", "#e7515a", "#3cba92"],
     series: [
       {
-        data: seriesCases,
+        data: selectLast(seriesCases, lastGraphItems),
         name: "Cases"
       },
       {
-        data: seriesDeaths,
+        data: selectLast(seriesDeaths, lastGraphItems),
         name: "Deaths"
       },
       {
-        data: seriesRecovered,
+        data: selectLast(seriesRecovered, lastGraphItems),
         name: "Recovered"
       }
     ],
-    labels: seriesLabels
+    labels: selectLast(seriesLabels, lastGraphItems)
   };
   window.render.graph(graphOptions);
 
@@ -267,7 +297,7 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
     tableRows += `
   <tr>
     <td class="flag-emoji">${value.flag || "-"}</td>
-    <td><a href="?cc=${value.code}">${value.country}</a></td>
+    <td><a href="?country=${value.code}">${value.country}</a></td>
     <td>${value.code || "-"}</td>
     <td>
       <div class="progress br-30">
@@ -280,7 +310,7 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
     ${tdDiff("deaths")}
     <td>${value.recovered}</td>
     ${tdDiff("recovered")}
-    <td>${value.casesPerOneMillion > 0 ? value.casesPerOneMillion : "-"}</td>
+    <td>${value.fatalityRate > 0 ? value.fatalityRate : "-"}</td>
     <td>${value.critical > 0 ? value.critical : "-"}</td>
   </tr>`;
 
@@ -319,120 +349,34 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
     stripeClasses: []
   });
 
-  const selectedCountryOptions = {
-    chart: {
-      type: "donut",
-      width: 380
-    },
-    colors: ["#1b55e2", "#3cba92", "#e2a03f", "#e7515a"], //purple, green, red, orange
-    dataLabels: {
-      enabled: false
-    },
+  window.render.piechart({
+    title: "🌍 World impact so far",
     labels: ["Cases", "Recovered", "Unresolved", "Deaths"],
-    legend: {
-      fontSize: "14px",
-      horizontalAlign: "center",
-      itemMargin: {
-        horizontal: 0,
-        vertical: 8
-      },
-      markers: {
-        height: 10,
-        width: 10
-      },
-      position: "bottom"
-    },
-    plotOptions: {
-      pie: {
-        donut: {
-          background: "transparent",
-          labels: {
-            name: {
-              color: undefined,
-              fontFamily: "Quicksand, sans-serif",
-              fontSize: "29px",
-              offsetY: -10,
-              show: true
-            },
-            show: true,
-            total: {
-              color: "#888ea8",
-              formatter: function(w) {
-                return numberWithCommas(
-                  w.globals.seriesTotals.reduce(function(a, b) {
-                    return a + b;
-                  }, 0)
-                );
-              },
-              label: "Total",
-              show: true,
-              showAlways: true
-            },
-            value: {
-              color: "#bfc9d4",
-              fontFamily: "Quicksand, sans-serif",
-              fontSize: "26px",
-              formatter: function(val) {
-                return numberWithCommas(val);
-              },
-              offsetY: 16,
-              show: true
-            }
-          },
-          size: "65%"
-        }
-      }
-    },
-    responsive: [
-      {
-        breakpoint: 1599,
-        options: {
-          chart: {
-            height: "400px",
-            width: "350px"
-          },
-          legend: {
-            position: "top"
-          }
-        },
-
-        breakpoint: 1439,
-        options: {
-          chart: {
-            height: "390px",
-            width: "250px"
-          },
-          legend: {
-            position: "bottom"
-          },
-          plotOptions: {
-            pie: {
-              donut: {
-                size: "65%"
-              }
-            }
-          }
-        }
-      }
-    ],
+    colors: ["#1b55e2", "#3cba92", "#e2a03f", "#e7515a"],
     series: [
       pageData.scmp.data.stats.cases,
       pageData.scmp.data.stats.recovered,
       pageData.scmp.data.stats.unresolved,
       pageData.scmp.data.stats.deaths
-    ],
-    stroke: {
-      colors: "#0e1726",
-      show: true,
-      width: 14
-    }
-  };
+    ]
+  });
 
-  const worldImpactPie = new ApexCharts(
-    document.querySelector("#worldImpactPie"),
-    selectedCountryOptions
-  );
-  worldImpactPie.render();
+  const chartDays = 7;
+
+  window.render.chart({
+    title: `Deaths vs. Recovered (Last ${chartDays} Days)`,
+    categories: selectLast(seriesLabels, chartDays),
+    series: [
+      {
+        name: "Deaths",
+        data: selectLast(seriesDeaths, chartDays)
+      },
+      {
+        name: "Recovered",
+        data: selectLast(seriesRecovered, chartDays)
+      }
+    ]
+  });
 };
 /*
 =================================

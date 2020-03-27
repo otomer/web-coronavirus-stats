@@ -34,6 +34,11 @@
       type="text/css"
     />
     <!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="assets/css/widgets/modules-widgets.css"
+    />
 
     <!-- BEGIN PAGE LEVEL STYLES -->
     <link
@@ -248,29 +253,49 @@ L82,35.7z"
               <div class="widget" id="cd-simple"></div>
             </div>
           </div>
+
           <div class="row layout-top-spacing">
-            <!-- ***************************** -->
-            <!-- World Impact so far Pie Chart -->
-            <!-- ***************************** -->
+            <div
+              class="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-12 layout-spacing"
+            >
+              <div class="widget widget-chart-three chart-7">
+                <div class="widget-heading">
+                  <div class="">
+                    <h5 class="title"></h5>
+                  </div>
+                </div>
+
+                <div class="widget-content">
+                  <div id="uniqueVisits"></div>
+                </div>
+              </div>
+            </div>
+
             <div
               class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 layout-spacing"
             >
               <div class="widget widget-chart-two">
                 <div class="widget-heading">
-                  <h5 class="">🌍 World Impact So Far</h5>
+                  <h5 id="pieChartTitle" class=""></h5>
                 </div>
                 <div class="widget-content">
                   <div class="" id="worldImpactPie"></div>
                 </div>
               </div>
             </div>
+          </div>
+
+          <div class="row layout-top-spacing">
+            <!-- ***************************** -->
+            <!-- World Impact so far Pie Chart -->
+            <!-- ***************************** -->
 
             <div
-              class="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-12 layout-spacing"
+              class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing"
             >
               <div class="widget widget-chart-one">
                 <div class="widget-heading">
-                  <h5 class="">📈 Impact Over Time</h5>
+                  <h5 class="" id="mainGraphTitle"></h5>
                   <ul class="tabs tab-pills">
                     <li>
                       <a class="tabmenu" href="javascript:void(0);" id="tb_1"
@@ -295,7 +320,7 @@ L82,35.7z"
           <!-- Impact Over Time Graph -->
           <!-- ********************** -->
 
-          <div class="row" id="cancel-row">
+          <div class="row specific-row" id="cancel-row" style="display:none;">
             <!-- *********************** -->
             <!-- Selected Country Charts -->
             <!-- *********************** -->
@@ -498,7 +523,7 @@ L82,35.7z"
                         <th></th>
                         <th>Recovered</th>
                         <th></th>
-                        <th>Cases/1M</th>
+                        <th>Fatality Rate</th>
                         <th>Critical</th>
                       </tr>
                     </thead>
@@ -515,7 +540,7 @@ L82,35.7z"
                         <th></th>
                         <th>Recovered</th>
                         <th></th>
-                        <th>Cases/1M</th>
+                        <th>Fatality Rate</th>
                         <th>Critical</th>
                       </tr>
                     </tfoot>
@@ -575,6 +600,7 @@ L82,35.7z"
     <script src="assets/js/render-counters.js"></script>
     <script src="assets/js/render-graph.js"></script>
     <script src="assets/js/render-loaded.js"></script>
+    <script src="assets/js/render-piechart.js"></script>
 
     <script src="assets/js/custom.js"></script>
     <!-- END GLOBAL MANDATORY SCRIPTS -->
@@ -606,5 +632,6 @@ L82,35.7z"
     <!--  BEGIN CUSTOM SCRIPTS FILE  -->
     <script src="plugins/jvector/jvector_script.js"></script>
     <!--  END CUSTOM SCRIPTS FILE  -->
+    <script src="assets/js/widgets/modules-widgets.js"></script>
   </body>
 </html>

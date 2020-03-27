@@ -42,3 +42,7 @@ function getUrlVars() {
   });
   return vars;
 }
+
+function selectLast(arr, i) {
+  return arr.slice(Math.max(arr.length - i, 0));
+}

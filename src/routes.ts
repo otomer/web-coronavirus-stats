@@ -41,7 +41,23 @@ cronDataInterval(
         // handle success
         for (var prop in response.data) {
           if (response.data.hasOwnProperty(prop)) {
-            cTimeseries[prop] = response.data[prop];
+            let newProp;
+
+            switch (prop) {
+              case "Mainland China":
+                newProp = "China";
+                break;
+              case "US":
+              case "USA":
+                newProp = "United States";
+                break;
+              default:
+                newProp = prop;
+            }
+            if (prop.indexOf("*") !== -1) {
+              newProp = prop.split("*").join("");
+            }
+            cTimeseries[newProp] = response.data[prop];
           }
         }
         timeseries = cTimeseries;
@@ -70,6 +86,17 @@ cronDataInterval(
 
         countriesResponse.data.forEach(
           (value: any, index: number, array: any) => {
+            switch (value.country) {
+              case "Mainland China":
+                value.country = "China";
+              case "US":
+              case "USA":
+                value.country = "United States";
+                break;
+            }
+            if (value.country.indexOf("*") !== -1) {
+              value.country = value.country.split("*").join("");
+            }
             if (!tempMap[value.country]) {
               tempMap[value.country] = value;
             }
@@ -95,6 +122,19 @@ cronDataInterval(
         };
 
         countries.forEach((value: any, index: number, array: any) => {
+          switch (value.country) {
+            case "Mainland China":
+              value.country = "China";
+              break;
+            case "US":
+            case "USA":
+              value.country = "United States";
+              break;
+          }
+          if (value.country.indexOf("*") !== -1) {
+            value.country = value.country.split("*").join("");
+          }
+
           value.casesPerOneMillion = -1;
           value.critical = -1;
           value.active = -1;
@@ -114,11 +154,13 @@ cronDataInterval(
           value.deaths = parseCommaNumber(value.deaths);
           value.recovered = parseCommaNumber(value.recovered);
           value.unresolved = value.cases - value.deaths - value.recovered;
+          value.fatalityRate =
+            value.cases >= 0 && value.deaths >= 0
+              ? Number(((value.deaths / value.cases) * 100).toFixed(2))
+              : null;
+
           extraStats.countriesImpacted += value.cases > 0 ? 1 : 0;
           extraStats.countriesDeaths += value.deaths > 0 ? 1 : 0;
-          if (value.country.indexOf("*") !== -1) {
-            value.country = value.country.split("*").join("");
-          }
 
           value.flag = flag(value.country);
           value.code = code(value.country);

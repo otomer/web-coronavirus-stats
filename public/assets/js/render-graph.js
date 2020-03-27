@@ -228,7 +228,7 @@
         }
       }
     };
-
+    $("#mainGraphTitle").html(options.title);
     const mainGraph = new ApexCharts(
       document.querySelector("#mainGraph"),
       mainGraphOptions
