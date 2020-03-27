@@ -19,10 +19,10 @@ const setRoute = (path: string, data: Function) =>
 
 // Controllers
 let scmp = {};
-setRoute("/scmp", () => scmp);
+setRoute("/api/scmp", () => scmp);
 
 let timeseries: any = {};
-setRoute("/timeseries", () => timeseries);
+setRoute("/api/timeseries", () => timeseries);
 
 //Helpers
 const cronDataInterval = (cb: Function, refreshMilliseconds?: number) => {
@@ -165,7 +165,7 @@ cronDataInterval(
           value.flag = flag(value.country);
           value.code = code(value.country);
 
-          setRoute("/country/" + value.code, () => {
+          setRoute("/api/country/" + value.code, () => {
             return { timeseries: timeseries[value.country] || [], ...value };
           });
         });

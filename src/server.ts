@@ -32,8 +32,13 @@ app.use(bodyParser.json()); // Support JSON bodies
 app.use(require("./routes")); // API Routes
 app.get("/status", (req: Request, res: Response) => res.send("Live! 🔥"));
 app.get("/config", (req: Request, res: Response) => res.send(config));
-app.get("/", (req: Request, res: Response) => res.sendFile("index.html"));
-
+app.get("/", (req: Request, res: Response) =>
+  res.sendFile("index.html", { root: "public" })
+);
+app.get("*", function(req: Request, res: Response) {
+  res.status(404);
+  res.sendFile("404.html", { root: "public" });
+});
 // _____________________________________________________
 // Start the server
 

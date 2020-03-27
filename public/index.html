@@ -101,6 +101,12 @@
       rel="stylesheet"
       type="text/css"
     />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="plugins/select2/select2.min.css"
+    />
+
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script
       async
@@ -143,9 +149,51 @@
 
         <div class="nav-logo align-self-center">
           <a class="navbar-brand" href="index.html">
-            <span class="navbar-brand-name">Coronavirus (COVID-19)</span></a
+            <span class="navbar-brand-name">Coronavirus Pandemic</span></a
           >
         </div>
+
+        <!-- <ul class="navbar-item flex-row mr-auto">
+          <li class="nav-item align-self-center search-animated">
+            <form
+              class="form-inline search-full form-inline search"
+              role="search"
+            >
+              <div class="search-bar">
+                <input
+                  type="text"
+                  class="form-control search-form-control  ml-lg-auto"
+                  placeholder="Search..."
+                />
+                <select
+                  class="form-control search-form-control  ml-lg-auto placeholder js-states form-control"
+                >
+                  <option>Choose...</option>
+                  <option value="one">First</option>
+                  <option value="two">Second</option>
+                  <option value="three">Third</option>
+                  <option value="four">Fourth</option>
+                  <option value="five">Fifth</option>
+                </select>
+              </div>
+            </form>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="feather feather-search toggle-search"
+            >
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </li>
+        </ul> -->
       </header>
     </div>
     <!--  END NAVBAR  -->
@@ -499,7 +547,8 @@ L82,35.7z"
             >
               <div id="world-map" style="height: 460px"></div>
             </div>
-
+          </div>
+          <div class="row">
             <!-- *************** -->
             <!-- Countries Table -->
             <!-- *************** -->
@@ -509,7 +558,7 @@ L82,35.7z"
                   <table
                     class="table table-hover"
                     id="countriesTable"
-                    style="width:100%"
+                    style="width:100%; display:none;"
                   >
                     <thead>
                       <tr>
@@ -542,6 +591,29 @@ L82,35.7z"
                         <th></th>
                         <th>Fatality Rate</th>
                         <th>Critical</th>
+                      </tr>
+                    </tfoot>
+                  </table>
+                  <table
+                    class="table table-hover"
+                    id="countryTable"
+                    style="width:100%; display:none;"
+                  >
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Confirmed</th>
+                        <th>Deaths</th>
+                        <th>Recovered</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot>
+                      <tr>
+                        <th>Date</th>
+                        <th>Confirmed</th>
+                        <th>Deaths</th>
+                        <th>Recovered</th>
                       </tr>
                     </tfoot>
                   </table>
@@ -608,6 +680,7 @@ L82,35.7z"
     <script src="assets/js/render-graph.js"></script>
     <script src="assets/js/render-loaded.js"></script>
     <script src="assets/js/render-piechart.js"></script>
+    <script src="assets/js/render-table.js"></script>
 
     <script src="assets/js/custom.js"></script>
     <!-- END GLOBAL MANDATORY SCRIPTS -->
@@ -640,5 +713,7 @@ L82,35.7z"
     <script src="plugins/jvector/jvector_script.js"></script>
     <!--  END CUSTOM SCRIPTS FILE  -->
     <script src="assets/js/widgets/modules-widgets.js"></script>
+
+    <script src="plugins/select2/select2.min.js"></script>
   </body>
 </html>

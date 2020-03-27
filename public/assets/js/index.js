@@ -1,4 +1,8 @@
 $(document).ready(function() {
+  // $(".placeholder").select2({
+  //   placeholder: "Make a Selection",
+  //   allowClear: true
+  // });
   // URL Params
   var countryCode = getUrlVars()["country"];
 
@@ -35,6 +39,7 @@ $(document).ready(function() {
           { value: pageData.country.deaths, title: "Deaths" },
           { value: pageData.country.fatalityRate, title: "Fatality Rate" }
         ]);
+
         const tsGraphDays = 20;
         const tsGraph = selectLast(pageData.country.timeseries, tsGraphDays);
         window.render.graph({
@@ -88,6 +93,26 @@ $(document).ready(function() {
             }
           ]
         });
+
+        let tableRows = "";
+        pageData.country.timeseries.forEach((v, i, arr) => {
+          tableRows += `
+          <tr>
+            <td>${v.date}</td>
+            <td>${v.confirmed}</td>
+            <td>${v.deaths}</td>
+            <td>${v.recovered}</td>
+          </tr>`;
+        });
+
+        window.render.table({
+          id: "#countryTable",
+          lastUpdate: selectLast(pageData.country.timeseries, 1)[0].date,
+          tableRows: tableRows,
+          lengthMenu: [10, 30, 50, 100, 500],
+          pageLength: 30,
+          order: [[0, "desc"]]
+        });
       });
   } else {
     $(".specific-row").show();
@@ -112,7 +137,7 @@ $(document).ready(function() {
 Get SCMP Data
 =================================
 */
-const fetchScmp = () => $.getJSON("/scmp");
+const fetchScmp = () => $.getJSON("/api/scmp");
 
 const handleScmpResponse = (scmpResponse, pageData) => {
   pageData.scmp = scmpResponse;
@@ -324,29 +349,13 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
   }); //end of countries.forEach
 
   // Set table rows content
-  const countriesTable = $("#countriesTable");
-  countriesTable.find("tbody").html(tableRows);
-  countriesTable.DataTable({
-    lengthMenu: [10, 30, mainPageLength, 100, 500],
-    oLanguage: {
-      oPaginate: {
-        sNext:
-          '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>',
-        sPrevious:
-          '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>'
-      },
-      sInfo: "Showing page _PAGE_ of _PAGES_",
-      sLengthMenu: `Results (Last update @ ${formatDate(
-        new Date(pageData.scmp.data.last_updated)
-      )}) :  _MENU_`,
-      sSearch:
-        '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
-      sSearchPlaceholder: "Search..."
-    },
-    order: [[3, "desc"]],
-    ordering: true,
-    pageLength: mainPageLength,
-    stripeClasses: []
+  window.render.table({
+    id: "#countriesTable",
+    lastUpdate: formatDate(new Date(pageData.scmp.data.last_updated)),
+    tableRows: tableRows,
+    lengthMenu: [10, 30, 50, 100, 500],
+    pageLength: 50,
+    order: [[3, "desc"]]
   });
 
   window.render.piechart({
@@ -383,7 +392,7 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
 Get Country Data
 =================================
 */
-const fetchCountry = cc => $.getJSON(`/country/${cc}`);
+const fetchCountry = cc => $.getJSON(`/api/country/${cc}`);
 const handleCountryResponse = (countryResponse, pageData) => {
   pageData.country = countryResponse.data;
 };
