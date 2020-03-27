@@ -19,6 +19,7 @@ const app = express(); // Create global app object
 
 // _____________________________________________________
 // Express Configurations
+app.use(secure);
 
 app.use(logger("dev"));
 app.use(express.static("public")); // Static files configuration
