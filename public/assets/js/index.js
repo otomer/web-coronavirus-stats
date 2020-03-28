@@ -27,6 +27,7 @@ $(document).ready(function() {
         window.location = "/";
       })
       .then(() => {
+        $("#rowChartStacked").hide();
         window.render.loaded();
         title.html(`${pageData.country.country} ${pageData.country.flag} `);
 
@@ -43,7 +44,7 @@ $(document).ready(function() {
         const tsGraphDays = 20;
         const tsGraph = selectLast(pageData.country.timeseries, tsGraphDays);
         window.render.graph({
-          title: `Impact over time (Last ${tsGraphDays} Days)`,
+          title: `Impact over time (${tsGraphDays} Days)`,
           colors: ["#1b55e2", "#e7515a", "#3cba92"],
           series: [
             {
@@ -116,6 +117,8 @@ $(document).ready(function() {
       });
   } else {
     $(".specific-row").show();
+    $("#rowChartStacked").show();
+
     $("body").on("map-selectRegion", function(event, countryCode) {
       updateSelectedCountryCharts(pageData.scmpCountries[countryCode]);
     });
@@ -230,9 +233,16 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
     seriesDeaths.push(mapByDate[mapByDateKeys[i]].deaths);
     seriesRecovered.push(mapByDate[mapByDateKeys[i]].recovered);
   }
+
+  const casesLastDay = selectLast(seriesCases, 1);
+  const deathsLastDay = selectLast(seriesDeaths, 1);
+
+  const fatalityRate =
+    Number(((deathsLastDay / casesLastDay) * 100).toFixed(2)) + "%";
   const lastGraphItems = 25;
   const graphOptions = {
-    title: `Impact over time (Last ${lastGraphItems} Days)`,
+    title: `Impact over time (${lastGraphItems} Days)`,
+    subtitle: fatalityRate,
     colors: ["#1b55e2", "#e7515a", "#3cba92"],
     series: [
       {
@@ -254,7 +264,6 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
 
   // Table
   let tableRows = "";
-  const mainPageLength = 50;
 
   // Pie chart
 
@@ -263,6 +272,8 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
     (pageData.scmp && pageData.scmp.data && pageData.scmp.data.entries) || [];
 
   let maxCasesNormalized;
+
+  let compareChartData = {};
 
   countries.forEach((value, index, array) => {
     value.flag = value.flag;
@@ -346,6 +357,28 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
     if (value.code === pageData.geoip.country_code) {
       updateSelectedCountryCharts(value);
     }
+
+    const cn =
+      value.continent.charAt(0).toUpperCase() + value.continent.slice(1);
+    if (!compareChartData[cn]) {
+      compareChartData[cn] = {
+        cases: 0,
+        deaths: 0,
+        recovered: 0,
+        critical: 0,
+        active: 0,
+        unresolved: 0,
+        fatalityRate: 0
+      };
+    }
+    compareChartData[cn].cases += value.cases >= 0 ? value.cases : 0;
+    compareChartData[cn].deaths += value.deaths >= 0 ? value.deaths : 0;
+    compareChartData[cn].recovered +=
+      value.recovered >= 0 ? value.recovered : 0;
+    compareChartData[cn].critical += value.critical >= 0 ? value.critical : 0;
+    compareChartData[cn].active += value.active >= 0 ? value.active : 0;
+    compareChartData[cn].unresolved +=
+      value.unresolved >= 0 ? value.unresolved : 0;
   }); //end of countries.forEach
 
   // Set table rows content
@@ -373,7 +406,7 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
   const chartDays = 7;
 
   window.render.chart({
-    title: `Deaths vs. Recovered (Last ${chartDays} Days)`,
+    title: `Deaths vs. Recovered (${chartDays} Days)`,
     categories: selectLast(seriesLabels, chartDays),
     series: [
       {
@@ -386,6 +419,72 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
       }
     ]
   });
+
+  for (let con in compareChartData) {
+    compareChartData[con].fatalityRate = Number(
+      (
+        (compareChartData[con].deaths / compareChartData[con].cases) *
+        100
+      ).toFixed(2)
+    );
+  }
+
+  const renderChartContinents = () => {
+    const renderContinents = (id, cc, title) => {
+      const continentsByProperty = (cc, name) => {
+        const arr = [];
+        for (let con in cc) {
+          arr.push(cc[con][name]);
+        }
+        return arr;
+      };
+
+      window.render.compareChart({
+        id: id,
+        title: title,
+        series: [
+          {
+            name: "Cases",
+            data: continentsByProperty(cc, "cases")
+          },
+          {
+            name: "Recovered",
+            data: continentsByProperty(cc, "recovered")
+          },
+
+          {
+            name: "Fatality Rate",
+            data: continentsByProperty(cc, "fatalityRate")
+          },
+          {
+            name: "Deaths",
+            data: continentsByProperty(cc, "deaths")
+          },
+          {
+            name: "Critical",
+            data: continentsByProperty(cc, "critical")
+          }
+        ],
+        categories: Object.keys(cc)
+      });
+    };
+
+    const cc1 = {};
+    const cc2 = {};
+
+    let i = 0;
+    for (let con in compareChartData) {
+      if (i < 3) {
+        cc1[con] = compareChartData[con];
+      } else {
+        cc2[con] = compareChartData[con];
+      }
+      i++;
+    }
+    renderContinents("#chartColumnStacked-1", cc1, "Top Continents");
+    renderContinents("#chartColumnStacked-2", cc2, "Other Continents");
+  };
+  renderChartContinents();
 };
 /*
 =================================

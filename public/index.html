@@ -196,6 +196,7 @@
         </ul> -->
       </header>
     </div>
+
     <!--  END NAVBAR  -->
 
     <!-- BEGIN LOADER -->
@@ -319,6 +320,9 @@ L82,35.7z"
               </div>
             </div>
 
+            <!-- ***************************** -->
+            <!-- World Impact so far Pie Chart -->
+            <!-- ***************************** -->
             <div
               class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 layout-spacing"
             >
@@ -334,19 +338,18 @@ L82,35.7z"
           </div>
 
           <div class="row layout-top-spacing">
-            <!-- ***************************** -->
-            <!-- World Impact so far Pie Chart -->
-            <!-- ***************************** -->
-
+            <!-- ********************** -->
+            <!-- Impact Over Time Graph -->
+            <!-- ********************** -->
             <div
               class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing"
             >
               <div class="widget widget-chart-one">
                 <div class="widget-heading">
-                  <h5 class="" id="mainGraphTitle"></h5>
+                  <h5 class="mainGraphTitle"></h5>
                   <ul class="tabs tab-pills">
                     <li>
-                      <a class="tabmenu" href="javascript:void(0);" id="tb_1"
+                      <a href="javascript:void(0);" id="tb_1" class="tabmenu"
                         >Daily</a
                       >
                     </li>
@@ -355,7 +358,7 @@ L82,35.7z"
 
                 <div class="widget-content">
                   <div class="tabs tab-content">
-                    <div class="tabcontent" id="content_1">
+                    <div id="content_1" class="tabcontent">
                       <div id="mainGraph"></div>
                     </div>
                   </div>
@@ -364,9 +367,36 @@ L82,35.7z"
             </div>
           </div>
 
-          <!-- ********************** -->
-          <!-- Impact Over Time Graph -->
-          <!-- ********************** -->
+          <div id="rowChartStacked" class="row" style="display:none">
+            <div id="chartColumnStacked-1" class="col-xl-6 layout-spacing">
+              <div class="statbox widget box box-shadow">
+                <div class="widget-header">
+                  <div class="row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                      <h4 class="stacked-title"></h4>
+                    </div>
+                  </div>
+                </div>
+                <div class="widget-content">
+                  <div class="s-col-stacked" class=""></div>
+                </div>
+              </div>
+            </div>
+            <div id="chartColumnStacked-2" class="col-xl-6 layout-spacing">
+              <div class="statbox widget box box-shadow">
+                <div class="widget-header">
+                  <div class="row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                      <h4 class="stacked-title"></h4>
+                    </div>
+                  </div>
+                </div>
+                <div class="widget-content">
+                  <div class="s-col-stacked" class=""></div>
+                </div>
+              </div>
+            </div>
+          </div>
 
           <div class="row specific-row" id="cancel-row" style="display:none;">
             <!-- *********************** -->
@@ -548,6 +578,7 @@ L82,35.7z"
               <div id="world-map" style="height: 460px"></div>
             </div>
           </div>
+
           <div class="row">
             <!-- *************** -->
             <!-- Countries Table -->
@@ -681,6 +712,7 @@ L82,35.7z"
     <script src="assets/js/render-loaded.js"></script>
     <script src="assets/js/render-piechart.js"></script>
     <script src="assets/js/render-table.js"></script>
+    <script src="assets/js/render-compareChart.js"></script>
 
     <script src="assets/js/custom.js"></script>
     <!-- END GLOBAL MANDATORY SCRIPTS -->
