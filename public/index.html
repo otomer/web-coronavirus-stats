@@ -102,9 +102,9 @@
       type="text/css"
     />
     <link
+      href="plugins/autocomplete/autocomplete.css"
       rel="stylesheet"
       type="text/css"
-      href="plugins/select2/select2.min.css"
     />
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -148,12 +148,13 @@
         ></a>
 
         <div class="nav-logo align-self-center">
-          <a class="navbar-brand" href="index.html">
-            <span class="navbar-brand-name">Coronavirus Pandemic</span></a
+          <a class="navbar-brand" href="index.html"
+            ><img alt="logo" src="assets/img/48x48.png" />
+            <span class="navbar-brand-name">Coronavirus (COVID-19)</span></a
           >
         </div>
 
-        <!-- <ul class="navbar-item flex-row mr-auto">
+        <ul class="navbar-item flex-row mr-auto">
           <li class="nav-item align-self-center search-animated">
             <form
               class="form-inline search-full form-inline search"
@@ -161,20 +162,12 @@
             >
               <div class="search-bar">
                 <input
+                  id="autocomplete-dynamic"
                   type="text"
-                  class="form-control search-form-control  ml-lg-auto"
-                  placeholder="Search..."
+                  class="form-control
+                search-form-control ml-lg-auto"
+                  placeholder="Search a Country..."
                 />
-                <select
-                  class="form-control search-form-control  ml-lg-auto placeholder js-states form-control"
-                >
-                  <option>Choose...</option>
-                  <option value="one">First</option>
-                  <option value="two">Second</option>
-                  <option value="three">Third</option>
-                  <option value="four">Fourth</option>
-                  <option value="five">Fifth</option>
-                </select>
               </div>
             </form>
             <svg
@@ -193,7 +186,29 @@
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
           </li>
-        </ul> -->
+        </ul>
+
+        <ul class="navbar-item flex-row nav-dropdowns">
+          <li
+            class="nav-item dropdown user-profile-dropdown order-lg-0 order-1"
+          >
+            <a
+              style="cursor: default;"
+              class="nav-link dropdown-toggle user"
+              id="user-profile-dropdown"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <div id="countryIndicator" class="media">
+                🌎&nbsp;
+                <div class="media-body align-self-center">
+                  <h6><span>World</span></h6>
+                </div>
+              </div>
+            </a>
+          </li>
+        </ul>
       </header>
     </div>
 
@@ -287,7 +302,7 @@ L82,35.7z"
         <div class="layout-px-spacing">
           <div class="page-header">
             <div class="page-title">
-              <h3 id="topTitle">Live Statistics</h3>
+              <h3 id="topTitle">World Live Statistics</h3>
             </div>
           </div>
 
@@ -713,6 +728,7 @@ L82,35.7z"
     <script src="assets/js/render-piechart.js"></script>
     <script src="assets/js/render-table.js"></script>
     <script src="assets/js/render-comparechart.js"></script>
+    <script src="assets/js/render-autocomplete.js"></script>
 
     <script src="assets/js/custom.js"></script>
     <!-- END GLOBAL MANDATORY SCRIPTS -->
@@ -745,7 +761,6 @@ L82,35.7z"
     <script src="plugins/jvector/jvector_script.js"></script>
     <!--  END CUSTOM SCRIPTS FILE  -->
     <script src="assets/js/widgets/modules-widgets.js"></script>
-
-    <script src="plugins/select2/select2.min.js"></script>
+    <script src="plugins/autocomplete/jquery.autocomplete.js"></script>
   </body>
 </html>

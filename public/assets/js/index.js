@@ -1,14 +1,4 @@
 $(document).ready(function() {
-  // $(".placeholder").select2({
-  //   placeholder: "Make a Selection",
-  //   allowClear: true
-  // });
-  // URL Params
-  var countryCode = getUrlVars()["country"];
-
-  // DOM
-  var title = $("#topTitle");
-
   window.pageData = {
     geoip: {},
     scmp: {},
@@ -17,6 +7,13 @@ $(document).ready(function() {
     country: {},
     mostImpactedCountry: null
   };
+
+  // URL Params
+  var countryCode = getUrlVars()["country"];
+
+  // DOM
+  var title = $("#topTitle");
+  var countryIndicator = $("#countryIndicator");
 
   if (countryCode) {
     $(".specific-row").hide();
@@ -29,7 +26,13 @@ $(document).ready(function() {
       .then(() => {
         $("#rowChartStacked").hide();
         window.render.loaded();
-        title.html(`${pageData.country.country} ${pageData.country.flag} `);
+        title.html(`${pageData.country.country} Live Statistics`);
+        countryIndicator.html(`${pageData.country.flag}&nbsp;
+        <div class="media-body align-self-center">
+          <h6>${pageData.country.country}</h6>
+        </div>`);
+
+        window.render.autocomplete({ lookup: pageData.country.ac });
 
         window.render.counters([
           {
@@ -40,12 +43,13 @@ $(document).ready(function() {
           { value: pageData.country.deaths, title: "Deaths" },
           { value: pageData.country.fatalityRate, title: "Fatality Rate" }
         ]);
-
+        const fatalityRate = Number(pageData.country.fatalityRate) + "%";
         const tsGraphDays = 20;
         const tsGraph = selectLast(pageData.country.timeseries, tsGraphDays);
         window.render.graph({
           title: `Impact over time (${tsGraphDays} Days)`,
           colors: ["#1b55e2", "#e7515a", "#3cba92"],
+          subtitle: fatalityRate,
           series: [
             {
               data: tsGraph.map(c => c.confirmed),
@@ -131,6 +135,7 @@ $(document).ready(function() {
       .then(res => handleTimeseriesResponse(res, pageData))
       .then(() => {
         window.log = () => console.log(pageData);
+        window.render.autocomplete({ lookup: pageData.scmp.data.ac });
       });
   }
 });
@@ -140,7 +145,7 @@ $(document).ready(function() {
 Get SCMP Data
 =================================
 */
-const fetchScmp = () => $.getJSON("/api/scmp");
+const fetchScmp = () => $.getJSON("/api/world");
 
 const handleScmpResponse = (scmpResponse, pageData) => {
   pageData.scmp = scmpResponse;
@@ -170,15 +175,7 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
     { value: pageData.scmp.data.stats.todayCases, title: "Today Cases" },
     { value: pageData.scmp.data.stats.critical, title: "Critical" },
     { value: pageData.scmp.data.stats.deaths, title: "Deaths" },
-    { value: pageData.scmp.data.stats.cases, title: "Cases" },
-    {
-      value: pageData.scmp.data.stats.countriesDeaths,
-      title: "Countries +Deaths"
-    },
-    {
-      value: pageData.scmp.data.stats.countriesImpacted,
-      title: "Countries +Cases"
-    }
+    { value: pageData.scmp.data.stats.cases, title: "Cases" }
   ]);
 
   timeseriesResponse["United States"] = timeseriesResponse["US"];
@@ -329,11 +326,12 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
 
       return `<td class="${cls}">${txt}</td>`;
     };
+    const countryHref = `href="?country=${value.code}"`;
 
     tableRows += `
   <tr>
     <td class="flag-emoji">${value.flag || "-"}</td>
-    <td><a href="?country=${value.code}">${value.country}</a></td>
+    <td><a class="country-link" ${countryHref}>${value.country}</a></td>
     <td>${value.code || "-"}</td>
     <td>
       <div class="progress br-30">
@@ -392,7 +390,7 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
   });
 
   window.render.piechart({
-    title: "🌍 World impact so far",
+    title: "Impact so far",
     labels: ["Cases", "Recovered", "Unresolved", "Deaths"],
     colors: ["#1b55e2", "#3cba92", "#e2a03f", "#e7515a"],
     series: [

@@ -18,11 +18,13 @@ const setRoute = (path: string, data: Function) =>
   );
 
 // Controllers
-let scmp = {};
-setRoute("/api/scmp", () => scmp);
+let countriesAutocomplete: any = [];
+
+let world = {};
+setRoute("/api/world", () => world);
 
 let timeseries: any = {};
-setRoute("/api/timeseries", () => timeseries);
+// setRoute("/api/timeseries", () => timeseries);
 
 //Helpers
 const cronDataInterval = (cb: Function, refreshMilliseconds?: number) => {
@@ -166,16 +168,31 @@ cronDataInterval(
           value.code = code(value.country);
 
           setRoute("/api/country/" + value.code, () => {
-            return { timeseries: timeseries[value.country] || [], ...value };
+            return {
+              ac: countriesAutocomplete,
+              timeseries: timeseries[value.country] || [],
+              ...value
+            };
+          });
+
+          countriesAutocomplete.push({
+            value: value.country,
+            data: value.code
           });
         });
+
+        // countryRoutesToRegister.forEach(
+        //   (value: any, index: number, array: any) => {}
+        // );
+
         scmpResponse.data.stats = {
           ...stats.data,
           ...extraStats
         };
+        scmpResponse.data.ac = countriesAutocomplete;
 
-        scmp = scmpResponse.data;
-        console.log(`✅ ${new Date().toString()} - SCMP loaded`);
+        world = scmpResponse.data;
+        console.log(`✅ ${new Date().toString()} - World SCMP loaded`);
       })
       .catch(function(error: Error) {
         console.log(error);

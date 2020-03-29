@@ -2919,3 +2919,14 @@ td.decrease {
 .footer-link {
   color: #009688 !important;
 }
+
+.country-link {
+  color: #25d5e4 !important;
+}
+
+@media (max-width: 991px) {
+  .autocomplete-suggestions {
+    z-index: 99999 !important;
+    top: 68px !important;
+  }
+}
