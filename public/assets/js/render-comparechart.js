@@ -44,6 +44,7 @@
       document.querySelector(options.id).querySelector(".s-col-stacked"),
       sColStacked
     );
+
     $(options.id)
       .find(".stacked-title")
       .html(options.title);
