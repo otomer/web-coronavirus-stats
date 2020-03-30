@@ -2926,7 +2926,8 @@ td.decrease {
 
 @media (max-width: 991px) {
   .autocomplete-suggestions {
-    z-index: 99999 !important;
     top: 68px !important;
+    position: fixed !important;
+    left: 48px !important;
   }
 }

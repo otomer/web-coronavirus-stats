@@ -4,6 +4,7 @@
     $("#autocomplete-dynamic").autocomplete({
       lookup: options.lookup,
       onSelect: function(suggestion) {
+        alert("a");
         window.location.href = "/index.html?country=" + suggestion.data;
       }
     });

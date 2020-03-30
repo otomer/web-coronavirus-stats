@@ -176,7 +176,7 @@ cronDataInterval(
           });
 
           countriesAutocomplete.push({
-            value: value.country,
+            value: `${value.flag} ${value.country}`,
             data: value.code
           });
         });
