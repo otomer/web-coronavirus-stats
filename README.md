@@ -8,7 +8,8 @@ Lean more about
 [Coronavirus disease](https://en.wikipedia.org/wiki/Coronavirus_disease_2019) and
 [Coronavirus Pandemic](https://en.wikipedia.org/wiki/2019%E2%80%9320_coronavirus_pandemic) (Wikipedia)
 
-<a href="https://ibb.co/TBjvFdN"><img src="https://i.ibb.co/wNG0xj2/screencapture-coronavirus-epidemic-2020-03-21-20-48-36.png" alt="screencapture-coronavirus-epidemic-2020-03-21-20-48-36" border="0"></a>
+<a href="https://ibb.co/x8D4NkP"><img src="https://i.ibb.co/S7PLzjW/screencapture-coronavirus-epidemic-index-html-2020-03-30-09-20-00.png" alt="screencapture-coronavirus-epidemic-index-html-2020-03-30-09-20-00" border="0"></a>
+
 
 ## Technologies Used
 
