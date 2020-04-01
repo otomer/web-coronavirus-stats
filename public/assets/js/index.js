@@ -270,8 +270,6 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
 
   let maxCasesNormalized;
 
-  let compareChartData = {};
-
   countries.forEach((value, index, array) => {
     value.flag = value.flag;
     value.code = value.code;
@@ -355,28 +353,6 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
     if (value.code === pageData.geoip.country_code) {
       updateSelectedCountryCharts(value);
     }
-
-    const cn =
-      value.continent.charAt(0).toUpperCase() + value.continent.slice(1);
-    if (!compareChartData[cn]) {
-      compareChartData[cn] = {
-        cases: 0,
-        deaths: 0,
-        recovered: 0,
-        critical: 0,
-        active: 0,
-        unresolved: 0,
-        fatalityRate: 0
-      };
-    }
-    compareChartData[cn].cases += value.cases >= 0 ? value.cases : 0;
-    compareChartData[cn].deaths += value.deaths >= 0 ? value.deaths : 0;
-    compareChartData[cn].recovered +=
-      value.recovered >= 0 ? value.recovered : 0;
-    compareChartData[cn].critical += value.critical >= 0 ? value.critical : 0;
-    compareChartData[cn].active += value.active >= 0 ? value.active : 0;
-    compareChartData[cn].unresolved +=
-      value.unresolved >= 0 ? value.unresolved : 0;
   }); //end of countries.forEach
 
   // Set table rows content
@@ -418,10 +394,11 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
     ]
   });
 
-  for (let con in compareChartData) {
-    compareChartData[con].fatalityRate = Number(
+  for (let con in pageData.scmp.data.continents) {
+    pageData.scmp.data.continents[con].fatalityRate = Number(
       (
-        (compareChartData[con].deaths / compareChartData[con].cases) *
+        (pageData.scmp.data.continents[con].deaths /
+          pageData.scmp.data.continents[con].cases) *
         100
       ).toFixed(2)
     );
@@ -471,11 +448,11 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
     const cc2 = {};
 
     let i = 0;
-    for (let con in compareChartData) {
+    for (let con in pageData.scmp.data.continents) {
       if (i < 3) {
-        cc1[con] = compareChartData[con];
+        cc1[con] = pageData.scmp.data.continents[con];
       } else {
-        cc2[con] = compareChartData[con];
+        cc2[con] = pageData.scmp.data.continents[con];
       }
       i++;
     }

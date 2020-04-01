@@ -19,12 +19,10 @@ const setRoute = (path: string, data: Function) =>
 
 // Controllers
 let countriesAutocomplete: any = [];
-
+const continents: any = {};
+let timeseries: any = {};
 let world = {};
 setRoute("/api/world", () => world);
-
-let timeseries: any = {};
-// setRoute("/api/timeseries", () => timeseries);
 
 //Helpers
 const cronDataInterval = (cb: Function, refreshMilliseconds?: number) => {
@@ -175,22 +173,48 @@ cronDataInterval(
             };
           });
 
-          countriesAutocomplete.push({
-            value: `${value.flag} ${value.country}`,
-            data: value.code
-          });
-        });
+          const f = countriesAutocomplete.find(
+            (item: any) => item.data == value.code
+          );
 
-        // countryRoutesToRegister.forEach(
-        //   (value: any, index: number, array: any) => {}
-        // );
+          if (!f) {
+            countriesAutocomplete.push({
+              value: `${value.flag} ${value.country}`,
+              data: value.code
+            });
+          }
+
+          const continent =
+            value.continent.charAt(0).toUpperCase() + value.continent.slice(1);
+
+          if (!continents[continent]) {
+            continents[continent] = {
+              cases: 0,
+              deaths: 0,
+              recovered: 0,
+              critical: 0,
+              active: 0,
+              unresolved: 0,
+              fatalityRate: 0
+            };
+          }
+          continents[continent].cases += value.cases >= 0 ? value.cases : 0;
+          continents[continent].deaths += value.deaths >= 0 ? value.deaths : 0;
+          continents[continent].recovered +=
+            value.recovered >= 0 ? value.recovered : 0;
+          continents[continent].critical +=
+            value.critical >= 0 ? value.critical : 0;
+          continents[continent].active += value.active >= 0 ? value.active : 0;
+          continents[continent].unresolved +=
+            value.unresolved >= 0 ? value.unresolved : 0;
+        });
 
         scmpResponse.data.stats = {
           ...stats.data,
           ...extraStats
         };
         scmpResponse.data.ac = countriesAutocomplete;
-
+        scmpResponse.data.continents = continents;
         world = scmpResponse.data;
         console.log(`✅ ${new Date().toString()} - World SCMP loaded`);
       })
