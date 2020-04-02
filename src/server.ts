@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const secure = require("express-force-https");
 import logger = require("morgan");
+const redis = require("redis");
 
 import { Request, Response } from "express";
 
@@ -10,13 +11,18 @@ import { Request, Response } from "express";
  */
 // _____________________________________________________
 // Initialization
-
+let redisClient: any;
+if (process.env.REDIS_URL) {
+  redisClient = redis.createClient(process.env.REDIS_URL);
+  //Run on server otherwise
+} else {
+  redisClient = redis.createClient();
+}
 const config = {
   PORT: process.env.PORT || 3000,
   STARTED: new Date().toString()
 };
 const app = express(); // Create global app object
-
 // _____________________________________________________
 // Express Configurations
 app.use(secure);
@@ -32,6 +38,25 @@ app.use(bodyParser.json()); // Support JSON bodies
 app.use(require("./routes")); // API Routes
 app.get("/status", (req: Request, res: Response) => res.send("Live! 🔥"));
 app.get("/config", (req: Request, res: Response) => res.send(config));
+app.get("/redis", (req: Request, res: Response) => {
+  const key = "test";
+  redisClient.get(key, (error: any, reply: any) => {
+    if (!error && reply) {
+      res.json({
+        cached: true,
+        json: JSON.parse(reply)
+      });
+    } else {
+      const n: any = { example: Date.now() };
+      res.json({
+        cached: false,
+        json: n
+      });
+      redisClient.setex(key, 60, JSON.stringify(n));
+    }
+  });
+});
+
 app.get("/", (req: Request, res: Response) =>
   res.sendFile("index.html", { root: "public" })
 );

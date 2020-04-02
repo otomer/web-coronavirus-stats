@@ -32,7 +32,11 @@ $(document).ready(function() {
           <h6>${pageData.country.country}</h6>
         </div>`);
 
-        window.render.autocomplete({ lookup: pageData.country.ac });
+        window.render.autocomplete({
+          lookup: pageData.country.ac,
+          id: "#autocomplete-dynamic",
+          onEnter: text => countriesModule.code(text)
+        });
 
         window.render.counters([
           {
@@ -135,7 +139,11 @@ $(document).ready(function() {
       .then(res => handleTimeseriesResponse(res, pageData))
       .then(() => {
         window.log = () => console.log(pageData);
-        window.render.autocomplete({ lookup: pageData.scmp.data.ac });
+        window.render.autocomplete({
+          lookup: pageData.scmp.data.ac,
+          id: "#autocomplete-dynamic",
+          onEnter: text => countriesModule.code(text)
+        });
       });
   }
 });
