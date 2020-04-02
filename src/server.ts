@@ -18,15 +18,15 @@ if (process.env.REDIS_URL) {
 } else {
   redisClient = redis.createClient();
 }
+
 const config = {
   PORT: process.env.PORT || 3000,
   STARTED: new Date().toString()
 };
-const app = express(); // Create global app object
 // _____________________________________________________
+const app = express(); // Create global app object
 // Express Configurations
 app.use(secure);
-
 app.use(logger("dev"));
 app.use(express.static("public")); // Static files configuration
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -37,7 +37,15 @@ app.use(bodyParser.json()); // Support JSON bodies
 
 app.use(require("./routes")); // API Routes
 app.get("/status", (req: Request, res: Response) => res.send("Live! 🔥"));
-app.get("/config", (req: Request, res: Response) => res.send(config));
+app.get("/config", (req: Request, res: Response) =>
+  res.send({
+    ...config,
+    connected: redisClient.connected,
+    ready: redisClient.ready,
+    shouldBuffer: redisClient.should_buffer,
+    address: redisClient.address
+  })
+);
 app.get("/redis", (req: Request, res: Response) => {
   const key = "test";
   redisClient.get(key, (error: any, reply: any) => {
