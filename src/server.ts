@@ -3,6 +3,8 @@ const bodyParser = require("body-parser");
 const secure = require("express-force-https");
 import logger = require("morgan");
 const redis = require("redis");
+var url = require("url");
+var Redis = require("ioredis");
 
 import { Request, Response } from "express";
 
@@ -11,13 +13,27 @@ import { Request, Response } from "express";
  */
 // _____________________________________________________
 // Initialization
+
 let redisClient: any;
 if (process.env.REDIS_URL) {
-  redisClient = redis.createClient(process.env.REDIS_URL);
+  const redis_uri = url.parse(process.env.REDIS_URL);
+  redisClient = new Redis({
+    port: Number(redis_uri.port) + 1,
+    host: redis_uri.hostname,
+    password: redis_uri.auth.split(":")[1],
+    db: 0,
+    tls: {
+      rejectUnauthorized: false,
+      requestCert: true,
+      agent: false
+    }
+  });
   //Run on server otherwise
 } else {
-  redisClient = redis.createClient();
+  redisClient = new Redis();
 }
+
+redisClient.set("foo", "bar"); // returns promise which resolves to string, "OK"
 
 const config = {
   PORT: process.env.PORT || 3000,
@@ -46,24 +62,24 @@ app.get("/config", (req: Request, res: Response) =>
     address: redisClient.address
   })
 );
-app.get("/redis", (req: Request, res: Response) => {
-  const key = "test";
-  redisClient.get(key, (error: any, reply: any) => {
-    if (!error && reply) {
-      res.json({
-        cached: true,
-        json: JSON.parse(reply)
-      });
-    } else {
-      const n: any = { example: Date.now() };
-      res.json({
-        cached: false,
-        json: n
-      });
-      redisClient.setex(key, 60, JSON.stringify(n));
-    }
-  });
-});
+// app.get("/redis", (req: Request, res: Response) => {
+//   const key = "test";
+//   redisClient.get(key, (error: any, reply: any) => {
+//     if (!error && reply) {
+//       res.json({
+//         cached: true,
+//         json: JSON.parse(reply)
+//       });
+//     } else {
+//       const n: any = { example: Date.now() };
+//       res.json({
+//         cached: false,
+//         json: n
+//       });
+//       redisClient.setex(key, 60, JSON.stringify(n));
+//     }
+//   });
+// });
 
 app.get("/", (req: Request, res: Response) =>
   res.sendFile("index.html", { root: "public" })
