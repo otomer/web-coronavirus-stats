@@ -6,6 +6,7 @@ const utils = {
     var seconds: any = ((millis % 60000) / 1000).toFixed(0);
     return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
   },
+
   log: (text: string, icon: string) => {
     console.log(`${icon}  ${new Date().toString()} - ${text}`);
   }

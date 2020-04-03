@@ -1,26 +1,16 @@
-var url = require("url");
-var Redis = require("ioredis");
+const Redis = require("ioredis");
 const utils = require("./utils");
-const winston = require("winston");
-const wlogger = winston.createLogger({
-  transports: [new winston.transports.Console()]
-});
 
 import { Response } from "express";
 
-let redis_url = process.env.REDIS_URL;
-if (!redis_url) {
-  redis_url = "redis://127.0.0.1";
-}
-
+let redisUrl = process.env.REDIS_URL || "redis://127.0.0.1";
 let redisClient: any, client: any, redis: any;
 
 const redisUtils = {
   client: () => {
     if (!redisClient) {
-      //redis setup
-      redisClient = require("redis").createClient(redis_url);
-      redis = new Redis(redis_url);
+      redisClient = require("redis").createClient(redisUrl);
+      redis = new Redis(redisUrl);
     }
 
     return redisClient;

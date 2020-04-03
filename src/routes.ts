@@ -3,7 +3,7 @@ const express = require("express");
 const axios = require("axios");
 const resources = require("./resources");
 const { flag, code } = require("country-emoji");
-const redisUtils = require("./redisUtils");
+const redis = require("./redis");
 const utils = require("./utils");
 
 /**
@@ -22,9 +22,9 @@ const setRoute = (path: string, data: Function) =>
     })
   );
 
-const cachedRoute = (config: any, cb: any) =>
+const createCachableRoute = (config: any, cb: any) =>
   router.get(config.key, (req: Request, res: Response) =>
-    redisUtils.cache(
+    redis.cache(
       config.key,
       cb,
       (config.refreshMilliseconds / 1000) * config.maxFactor,
@@ -50,10 +50,14 @@ const CacheConfig = {
   }
 };
 
+/**
+ * Data Retrieval
+ */
+
 const getTimeseriesData = () =>
   axios
     .get(resources.timeseries)
-    .then(function(response: any) {
+    .then((response: any) => {
       const cTimeseries: any = {};
       // handle success
       for (var prop in response.data) {
@@ -80,8 +84,7 @@ const getTimeseriesData = () =>
       timeseries = cTimeseries;
       return cTimeseries;
     })
-    .catch(function(error: Error) {
-      // handle error
+    .catch((error: Error) => {
       console.log(error);
     });
 
@@ -98,7 +101,7 @@ const cron = (config: any, cb: Function) => {
   const retrieve = (step: string) =>
     cb().then((d: any) => {
       utils.log(`[Cron:${step}] '${config.key}'`, "✅");
-      redisUtils.set(
+      redis.set(
         config.key,
         () => setCallbackAsync(d),
         (config.refreshMilliseconds / 1000) * config.maxFactor
@@ -272,13 +275,19 @@ const getWorldData = () =>
       scmpResponse.data.continents = continents;
       return scmpResponse.data;
     })
-    .catch(function(error: Error) {
+    .catch((error: Error) => {
       console.log(error);
     });
 
-cachedRoute(CacheConfig.WORLD, getWorldData);
-cachedRoute(CacheConfig.TIMESERIES, getTimeseriesData);
+/**
+ * Set Routes
+ */
+createCachableRoute(CacheConfig.WORLD, getWorldData);
+createCachableRoute(CacheConfig.TIMESERIES, getTimeseriesData);
 
+/**
+ * Set Cron jobs
+ */
 cron(CacheConfig.WORLD, getWorldData);
 cron(CacheConfig.TIMESERIES, getTimeseriesData);
 
