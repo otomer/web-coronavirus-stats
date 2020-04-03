@@ -1,6 +1,10 @@
 var url = require("url");
 var Redis = require("ioredis");
 const utils = require("./utils");
+const winston = require("winston");
+const wlogger = winston.createLogger({
+  transports: [new winston.transports.Console()]
+});
 
 import { Response } from "express";
 
@@ -10,6 +14,7 @@ const redisUtils = {
   client: () => {
     if (!redis) {
       if (process.env.REDIS_URL) {
+        wlogger.info("Redis URL Exist");
         const redis_uri = url.parse(process.env.REDIS_URL);
         redis = new Redis({
           port: Number(redis_uri.port) + 1,
@@ -24,6 +29,8 @@ const redisUtils = {
         });
         //Run on server otherwise
       } else {
+        wlogger.info("No Redis URL");
+
         redis = new Redis();
       }
     }

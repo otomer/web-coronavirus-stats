@@ -2,10 +2,15 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const secure = require("express-force-https");
 import logger = require("morgan");
-
+const winston = require("winston");
 var redisUtils = require("./redisUtils");
 
-import { Request, Response, response } from "express";
+import { Request, Response } from "express";
+
+const wlogger = winston.createLogger({
+  transports: [new winston.transports.Console()]
+});
+wlogger.info("A");
 
 /**
  * Server Definition
