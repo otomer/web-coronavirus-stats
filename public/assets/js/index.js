@@ -344,6 +344,7 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
           <div class="progress-bar br-30 bg-${impactLevel}" role="progressbar" style="width: ${impactPercentage}%" aria-valuenow="${impactPercentage}" aria-valuemin="0" aria-valuemax="100"></div>
       </div>
     </td>
+    <td>${value.continent}</td>
     <td>${value.cases}</td>
     ${tdDiff("cases")}
     <td>${value.deaths}</td>
