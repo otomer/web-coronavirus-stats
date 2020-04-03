@@ -8,43 +8,30 @@ const wlogger = winston.createLogger({
 
 import { Response } from "express";
 
-let redis: any;
+let redis_url = process.env.REDIS_URL;
+if (!redis_url) {
+  redis_url = "redis://127.0.0.1";
+}
+
+let redisClient: any, client: any, redis: any;
 
 const redisUtils = {
   client: () => {
-    if (!redis) {
-      if (process.env.REDIS_URL) {
-        wlogger.info("Redis URL Exist");
-        const redis_uri = url.parse(process.env.REDIS_URL);
-        redis = new Redis({
-          port: Number(redis_uri.port) + 1,
-          host: redis_uri.hostname,
-          password: redis_uri.auth.split(":")[1],
-          db: 0,
-          connectTimeout: 20000,
-          tls: {
-            rejectUnauthorized: false,
-            requestCert: true,
-            agent: false
-          }
-        });
-        //Run on server otherwise
-      } else {
-        wlogger.info("No Redis URL");
-
-        redis = new Redis();
-      }
+    if (!redisClient) {
+      //redis setup
+      redisClient = require("redis").createClient(redis_url);
+      redis = new Redis(redis_url);
     }
 
-    return redis;
+    return redisClient;
   },
   test: () => {
-    if (!redis) {
+    if (!redisClient) {
       redisUtils.client();
     }
     const SAMPLE_REDIS_KEY = "test";
     const val = "Yep, Redis works! 👌";
-    redis.set(SAMPLE_REDIS_KEY, val);
+    redisClient.set(SAMPLE_REDIS_KEY, val);
     console.log("Redis tested.");
     return val;
   },
@@ -57,7 +44,12 @@ const redisUtils = {
         "⏳"
       );
 
-      redis.set(key, JSON.stringify(resultObject), "EX", expirationSeconds);
+      redisClient.set(
+        key,
+        JSON.stringify(resultObject),
+        "EX",
+        expirationSeconds
+      );
       return resultObject;
     });
   },
@@ -67,7 +59,7 @@ const redisUtils = {
     expirationSeconds: number,
     response: Response
   ) =>
-    redis.get(key, (err: any, result: any) => {
+    redisClient.get(key, (err: any, result: any) => {
       if (err) {
         return response ? response.json({ err }) : { err };
       } else {
