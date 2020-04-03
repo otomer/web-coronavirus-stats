@@ -140,7 +140,7 @@ $(document).ready(function() {
       .then(() => {
         window.log = () => console.log(pageData);
         window.render.autocomplete({
-          lookup: pageData.scmp.data.ac,
+          lookup: pageData.scmp.ac,
           id: "#autocomplete-dynamic",
           onEnter: text => countriesModule.code(text)
         });
@@ -179,11 +179,11 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
   const seriesLabels = [];
 
   window.render.counters([
-    { value: pageData.scmp.data.stats.todayDeaths, title: "Today Deaths" },
-    { value: pageData.scmp.data.stats.todayCases, title: "Today Cases" },
-    { value: pageData.scmp.data.stats.critical, title: "Critical" },
-    { value: pageData.scmp.data.stats.deaths, title: "Deaths" },
-    { value: pageData.scmp.data.stats.cases, title: "Cases" }
+    { value: pageData.scmp.stats.todayDeaths, title: "Today Deaths" },
+    { value: pageData.scmp.stats.todayCases, title: "Today Cases" },
+    { value: pageData.scmp.stats.critical, title: "Critical" },
+    { value: pageData.scmp.stats.deaths, title: "Deaths" },
+    { value: pageData.scmp.stats.cases, title: "Cases" }
   ]);
 
   timeseriesResponse["United States"] = timeseriesResponse["US"];
@@ -274,7 +274,7 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
 
   // Construct countries object
   let countries =
-    (pageData.scmp && pageData.scmp.data && pageData.scmp.data.entries) || [];
+    (pageData.scmp && pageData.scmp && pageData.scmp.entries) || [];
 
   let maxCasesNormalized;
 
@@ -366,7 +366,7 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
   // Set table rows content
   window.render.table({
     id: "#countriesTable",
-    lastUpdate: formatDate(new Date(pageData.scmp.data.last_updated)),
+    lastUpdate: formatDate(new Date(pageData.scmp.last_updated)),
     tableRows: tableRows,
     lengthMenu: [10, 30, 50, 100, 500],
     pageLength: 50,
@@ -378,10 +378,10 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
     labels: ["Cases", "Recovered", "Unresolved", "Deaths"],
     colors: ["#1b55e2", "#3cba92", "#e2a03f", "#e7515a"],
     series: [
-      pageData.scmp.data.stats.cases,
-      pageData.scmp.data.stats.recovered,
-      pageData.scmp.data.stats.unresolved,
-      pageData.scmp.data.stats.deaths
+      pageData.scmp.stats.cases,
+      pageData.scmp.stats.recovered,
+      pageData.scmp.stats.unresolved,
+      pageData.scmp.stats.deaths
     ]
   });
 
@@ -402,11 +402,11 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
     ]
   });
 
-  for (let con in pageData.scmp.data.continents) {
-    pageData.scmp.data.continents[con].fatalityRate = Number(
+  for (let con in pageData.scmp.continents) {
+    pageData.scmp.continents[con].fatalityRate = Number(
       (
-        (pageData.scmp.data.continents[con].deaths /
-          pageData.scmp.data.continents[con].cases) *
+        (pageData.scmp.continents[con].deaths /
+          pageData.scmp.continents[con].cases) *
         100
       ).toFixed(2)
     );
@@ -456,11 +456,11 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
     const cc2 = {};
 
     let i = 0;
-    for (let con in pageData.scmp.data.continents) {
+    for (let con in pageData.scmp.continents) {
       if (i < 3) {
-        cc1[con] = pageData.scmp.data.continents[con];
+        cc1[con] = pageData.scmp.continents[con];
       } else {
-        cc2[con] = pageData.scmp.data.continents[con];
+        cc2[con] = pageData.scmp.continents[con];
       }
       i++;
     }
