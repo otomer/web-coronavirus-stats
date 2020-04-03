@@ -21,6 +21,7 @@ const redisUtils = {
           host: redis_uri.hostname,
           password: redis_uri.auth.split(":")[1],
           db: 0,
+          connectTimeout: 20000,
           tls: {
             rejectUnauthorized: false,
             requestCert: true,
