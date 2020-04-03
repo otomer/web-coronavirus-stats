@@ -79,6 +79,22 @@ const getTimeseriesData = () =>
             newProp = prop.split("*").join("");
           }
           cTimeseries[newProp] = response.data[prop];
+          let prevDay: {
+            date: string;
+            confirmed: number;
+            deaths: number;
+            recovered: number;
+          };
+          cTimeseries[newProp].forEach((v: any, i: any) => {
+            if (!prevDay) {
+              prevDay = v;
+            } else {
+              v.diffConfirmed = v.confirmed - prevDay.confirmed;
+              v.diffDeaths = v.deaths - prevDay.deaths;
+              v.diffRecovered = v.recovered - prevDay.recovered;
+              prevDay = { ...v };
+            }
+          });
         }
       }
       timeseries = cTimeseries;

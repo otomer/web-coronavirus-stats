@@ -11,7 +11,8 @@ const resources = {
   countries: "https://coronavirus-19-api.herokuapp.com/countries",
   country: (name: string) =>
     `https://coronavirus-19-api.herokuapp.com/countries/${name}`,
-  vtstats: "https://thevirustracker.com/free-api?global=stats"
+  vtstats: "https://api.thevirustracker.com/free-api?global=stats",
+  vtcountry: "https://api.thevirustracker.com/free-api?countryTimeline=IL"
 };
 
 module.exports = resources;

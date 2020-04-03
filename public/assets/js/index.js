@@ -1,3 +1,25 @@
+const convertDiffToTd = (diff, pos) => {
+  let txt = "-",
+    cls = "";
+
+  if (diff === 0) {
+    txt = "-";
+    cls = "";
+  } else if (diff > 0) {
+    txt = "+" + diff;
+    if (pos) {
+      cls = "decrease";
+    } else {
+      cls = "increase";
+    }
+  } else if (diff < 0) {
+    txt = "" + diff;
+    cls = "decrease";
+  }
+
+  return `<td class="${cls}">${txt}</td>`;
+};
+
 $(document).ready(function() {
   window.pageData = {
     geoip: {},
@@ -48,7 +70,7 @@ $(document).ready(function() {
           { value: pageData.country.fatalityRate, title: "Fatality Rate" }
         ]);
         const fatalityRate = Number(pageData.country.fatalityRate) + "%";
-        const tsGraphDays = 20;
+        const tsGraphDays = 30;
         const tsGraph = selectLast(pageData.country.timeseries, tsGraphDays);
         window.render.graph({
           title: `Impact over time (${tsGraphDays} Days)`,
@@ -109,8 +131,11 @@ $(document).ready(function() {
           <tr>
             <td>${v.date}</td>
             <td>${v.confirmed}</td>
+            ${convertDiffToTd(v.diffConfirmed)}
             <td>${v.deaths}</td>
+            ${convertDiffToTd(v.diffDeaths)}
             <td>${v.recovered}</td>
+            ${convertDiffToTd(v.diffRecovered, 1)}
           </tr>`;
         });
 
@@ -244,7 +269,7 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
 
   const fatalityRate =
     Number(((deathsLastDay / casesLastDay) * 100).toFixed(2)) + "%";
-  const lastGraphItems = 25;
+  const lastGraphItems = 30;
   const graphOptions = {
     title: `Impact over time (${lastGraphItems} Days)`,
     subtitle: fatalityRate,
@@ -308,29 +333,15 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
 
       let v1,
         v2,
-        diff = "-",
-        txt = "-",
-        cls = "";
+        diff = "-";
 
       if (prev) {
         v1 = value[prop];
-
         v2 = prev[prop];
         diff = v1 - v2;
       }
 
-      if (diff === 0) {
-        txt = "-";
-        cls = "";
-      } else if (diff > 0) {
-        txt = "+" + diff;
-        cls = "increase";
-      } else if (diff < 0) {
-        txt = "" + diff;
-        cls = "decrease";
-      }
-
-      return `<td class="${cls}">${txt}</td>`;
+      return convertDiffToTd(diff);
     };
     const countryHref = `href="?country=${value.code}"`;
 
