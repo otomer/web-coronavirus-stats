@@ -7,8 +7,10 @@
       content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no"
       name="viewport"
     />
-    <meta name="description">
-  </meta>
+    <meta
+      name="description"
+      content="Live statistics and coronavirus news tracking the number of confirmed cases, recovered patients, and death toll by country due to the COVID 19 coronavirus pandemic 2019–20 from Wuhan, China. Coronavirus counter with new cases, historical data, and info. Daily charts, graphs, news and updates"
+    />
     <title>
       Coronavirus Pandemic (COVID-19 disease) Live Reports & Statistics
     </title>
@@ -35,14 +37,11 @@
       rel="stylesheet"
       type="text/css"
     />
-    <!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
     <link
       rel="stylesheet"
       type="text/css"
       href="assets/css/widgets/modules-widgets.css"
     />
-
-    <!-- BEGIN PAGE LEVEL STYLES -->
     <link
       href="plugins/table/datatable/datatables.css"
       rel="stylesheet"
@@ -53,16 +52,12 @@
       rel="stylesheet"
       type="text/css"
     />
-    <!-- END PAGE LEVEL STYLES -->
-    <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM STYLES -->
     <link href="plugins/apex/apexcharts.css" rel="stylesheet" type="text/css" />
     <link
       href="assets/css/dashboard/dash_1.css"
       rel="stylesheet"
       type="text/css"
     />
-    <!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
-    <!-- BEGIN PAGE LEVEL STYLES -->
     <link href="assets/css/scrollspyNav.css" rel="stylesheet" type="text/css" />
     <link
       href="plugins/jvector/jquery-jvectormap-2.0.3.css"
@@ -166,8 +161,7 @@
                 <input
                   id="autocomplete-dynamic"
                   type="text"
-                  class="form-control
-                search-form-control ml-lg-auto"
+                  class="form-control search-form-control ml-lg-auto"
                   placeholder="Search a Country..."
                 />
               </div>
@@ -213,7 +207,6 @@
         </ul>
       </header>
     </div>
-
     <!--  END NAVBAR  -->
 
     <!-- BEGIN LOADER -->
@@ -290,9 +283,9 @@ L82,35.7z"
       <!--  BEGIN TOPBAR  -->
       <div class="topbar-nav header navbar" role="banner">
         <nav id="topbar">
-          <ul class="navbar-nav theme-brand flex-row  text-center">
+          <ul class="navbar-nav theme-brand flex-row text-center">
             <li class="nav-item theme-text">
-              <a href="index.html" class="nav-link"> Coronavirus </a>
+              <a href="/" class="nav-link"> Coronavirus </a>
             </li>
           </ul>
         </nav>
@@ -312,15 +305,18 @@ L82,35.7z"
           <!-- Counters -->
           <!-- ******** -->
           <div class="row layout-top-spacing">
+            <!--  BEGIN TOP COUNTERS  -->
             <div
               class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing"
               style="padding-bottom: 0;"
             >
               <div class="widget" id="cd-simple"></div>
             </div>
+            <!--  END TOP COUNTERS  -->
           </div>
 
           <div class="row layout-top-spacing">
+            <!--  BEGIN COMPARE CHART  -->
             <div
               class="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-12 layout-spacing"
             >
@@ -336,10 +332,9 @@ L82,35.7z"
                 </div>
               </div>
             </div>
+            <!--  END COMPARE CHART  -->
 
-            <!-- ***************************** -->
-            <!-- World Impact so far Pie Chart -->
-            <!-- ***************************** -->
+            <!--  BEGIN PIE CHART  -->
             <div
               class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 layout-spacing"
             >
@@ -352,12 +347,11 @@ L82,35.7z"
                 </div>
               </div>
             </div>
+            <!--  END PIE CHART  -->
           </div>
 
           <div class="row layout-top-spacing">
-            <!-- ********************** -->
-            <!-- Impact Over Time Graph -->
-            <!-- ********************** -->
+            <!--  BEGIN MAIN GRAPH  -->
             <div
               class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing"
             >
@@ -382,9 +376,11 @@ L82,35.7z"
                 </div>
               </div>
             </div>
+            <!--  END MAIN GRAPH  -->
           </div>
 
-          <div id="rowChartStacked" class="row" style="display:none">
+          <!--  BEGIN STACKED CHARTS  -->
+          <div id="rowChartStacked" class="row" style="display: none;">
             <div id="chartColumnStacked-1" class="col-xl-6 layout-spacing">
               <div class="statbox widget box box-shadow">
                 <div class="widget-header">
@@ -414,11 +410,10 @@ L82,35.7z"
               </div>
             </div>
           </div>
+          <!--  END STACKED CHARTS  -->
 
-          <div class="row specific-row" id="cancel-row" style="display:none;">
-            <!-- *********************** -->
-            <!-- Selected Country Charts -->
-            <!-- *********************** -->
+          <div class="row specific-row" id="cancel-row" style="display: none;">
+            <!--  BEGIN SELECT CHART  -->
             <div
               class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing"
             >
@@ -460,7 +455,7 @@ L82,35.7z"
                               aria-valuenow="90"
                               class="stat-progress-1 progress-bar bg-gradient-primary"
                               role="progressbar"
-                              style="width: 0%"
+                              style="width: 0%;"
                             ></div>
                           </div>
                         </div>
@@ -498,7 +493,7 @@ L82,35.7z"
                               aria-valuenow="90"
                               class="stat-progress-2 progress-bar bg-gradient-danger"
                               role="progressbar"
-                              style="width: 0%"
+                              style="width: 0%;"
                             ></div>
                           </div>
                         </div>
@@ -534,7 +529,7 @@ L82,35.7z"
                               aria-valuenow="90"
                               class="stat-progress-3 progress-bar bg-gradient-success"
                               role="progressbar"
-                              style="width: 0%"
+                              style="width: 0%;"
                             ></div>
                           </div>
                         </div>
@@ -575,7 +570,7 @@ L82,35.7z"
                               aria-valuenow="90"
                               class="stat-progress-4 progress-bar bg-gradient-warning"
                               role="progressbar"
-                              style="width: 0%"
+                              style="width: 0%;"
                             ></div>
                           </div>
                         </div>
@@ -585,28 +580,26 @@ L82,35.7z"
                 </div>
               </div>
             </div>
+            <!--  END SELECT CHART  -->
 
-            <!-- *********************** -->
-            <!-- World Map -->
-            <!-- *********************** -->
+            <!--  BEGIN WORLD MAP  -->
             <div
               class="col-xl-8 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing"
             >
-              <div id="world-map" style="height: 460px"></div>
+              <div id="world-map" style="height: 460px;"></div>
             </div>
+            <!--  END WORLD MAP  -->
           </div>
 
           <div class="row">
-            <!-- *************** -->
-            <!-- Countries Table -->
-            <!-- *************** -->
-            <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
+            <div class="col-xl-12 col-lg-12 col-sm-12 layout-spacing">
               <div class="widget-content widget-content-area br-6">
                 <div class="table-responsive mb-4 mt-4">
+                  <!--  BEGIN COUNTRIES TABLE  -->
                   <table
                     class="table table-hover"
                     id="countriesTable"
-                    style="width:100%; display:none;"
+                    style="width: 100%; display: none;"
                   >
                     <thead>
                       <tr>
@@ -644,10 +637,13 @@ L82,35.7z"
                       </tr>
                     </tfoot>
                   </table>
+                  <!--  END COUNTRIES TABLE  -->
+
+                  <!--  BEGIN COUNTRY TABLE  -->
                   <table
                     class="table table-hover"
                     id="countryTable"
-                    style="width:100%; display:none;"
+                    style="width: 100%; display: none;"
                   >
                     <thead>
                       <tr>
@@ -670,6 +666,7 @@ L82,35.7z"
                       </tr>
                     </tfoot>
                   </table>
+                  <!--  END COUNTRY TABLE  -->
                 </div>
               </div>
             </div>
@@ -723,7 +720,7 @@ L82,35.7z"
     <script src="plugins/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="assets/js/app.js"></script>
     <script>
-      $(document).ready(function() {
+      $(document).ready(function () {
         App.init();
       });
     </script>
@@ -736,6 +733,7 @@ L82,35.7z"
     <script src="assets/js/render-table.js"></script>
     <script src="assets/js/render-comparechart.js"></script>
     <script src="assets/js/render-autocomplete.js"></script>
+    <script src="assets/js/view-country.js"></script>
 
     <script src="assets/js/custom.js"></script>
     <!-- END GLOBAL MANDATORY SCRIPTS -->
@@ -745,7 +743,6 @@ L82,35.7z"
 
     <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
     <script src="plugins/apex/apexcharts.min.js"></script>
-    <!-- <script src="assets/js/dashboard/dash_2.js"></script> -->
     <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
 
     <!-- BEGIN PAGE LEVEL SCRIPTS -->

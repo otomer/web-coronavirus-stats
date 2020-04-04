@@ -2924,10 +2924,10 @@ td.decrease {
   color: #25d5e4 !important;
 }
 
-@media (max-width: 991px) {
+/* @media (max-width: 991px) {
   .autocomplete-suggestions {
     top: 68px !important;
     position: fixed !important;
     left: 48px !important;
   }
-}
+} */

@@ -20,14 +20,25 @@ const convertDiffToTd = (diff, pos) => {
   return `<td class="${cls}">${txt}</td>`;
 };
 
-$(document).ready(function() {
+const ViewsConfig = {
+  Main: {
+    COMPARE_CHART_DAYS: 10,
+    GRAPH_DAYS: 30,
+  },
+  Country: {
+    COMPARE_CHART_DAYS: 10,
+    GRAPH_DAYS: 30,
+  },
+};
+
+$(document).ready(function () {
   window.pageData = {
     geoip: {},
     scmp: {},
     timeseries: {},
     scmpCountries: {},
     country: {},
-    mostImpactedCountry: null
+    mostImpactedCountry: null,
   };
 
   // URL Params
@@ -41,133 +52,41 @@ $(document).ready(function() {
     $(".specific-row").hide();
 
     fetchCountry(countryCode)
-      .then(res => handleCountryResponse(res, pageData))
-      .catch(res => {
+      .then((res) => handleCountryResponse(res, pageData))
+      .catch((res) => {
         window.location = "/";
       })
       .then(() => {
-        $("#rowChartStacked").hide();
-        window.render.loaded();
-        title.html(`${pageData.country.country} Live Statistics`);
-        countryIndicator.html(`${pageData.country.flag}&nbsp;
-        <div class="media-body align-self-center">
-          <h6>${pageData.country.country}</h6>
-        </div>`);
-
-        window.render.autocomplete({
-          lookup: pageData.country.ac,
-          id: "#autocomplete-dynamic",
-          onEnter: text => countriesModule.code(text)
-        });
-
-        window.render.counters([
-          {
-            value: pageData.country.cases,
-            title: "Cases"
+        window.view.country({
+          selectors: {
+            title,
+            countryIndicator,
           },
-          { value: pageData.country.critical, title: "Critical" },
-          { value: pageData.country.deaths, title: "Deaths" },
-          { value: pageData.country.fatalityRate, title: "Fatality Rate" }
-        ]);
-        const fatalityRate = Number(pageData.country.fatalityRate) + "%";
-        const tsGraphDays = 30;
-        const tsGraph = selectLast(pageData.country.timeseries, tsGraphDays);
-        window.render.graph({
-          title: `Impact over time (${tsGraphDays} Days)`,
-          colors: ["#1b55e2", "#e7515a", "#3cba92"],
-          subtitle: fatalityRate,
-          series: [
-            {
-              data: tsGraph.map(c => c.confirmed),
-              name: "Cases"
-            },
-            {
-              data: tsGraph.map(c => c.deaths),
-              name: "Deaths"
-            },
-            {
-              data: tsGraph.map(c => c.recovered),
-              name: "Recovered"
-            }
-          ],
-          labels: tsGraph.map(c => c.date)
-        });
-
-        window.render.piechart({
-          title: "Impact so far",
-          labels: ["Cases", "Recovered", "Unresolved", "Deaths"],
-          colors: ["#1b55e2", "#3cba92", "#e2a03f", "#e7515a"],
-          series: [
-            pageData.country.cases,
-            pageData.country.recovered,
-            pageData.country.unresolved,
-            pageData.country.deaths
-          ]
-        });
-
-        const tsPiechartDays = 7;
-        const tsPiechart = selectLast(
-          pageData.country.timeseries,
-          tsPiechartDays
-        );
-        window.render.chart({
-          title: `Deaths vs. Recovered (Last ${tsPiechartDays} Days)`,
-          categories: tsPiechart.map(c => c.date),
-          series: [
-            {
-              name: "Deaths",
-              data: tsPiechart.map(c => c.deaths)
-            },
-            {
-              name: "Recovered",
-              data: tsPiechart.map(c => c.recovered)
-            }
-          ]
-        });
-
-        let tableRows = "";
-        pageData.country.timeseries.forEach((v, i, arr) => {
-          tableRows += `
-          <tr>
-            <td>${v.date}</td>
-            <td>${v.confirmed}</td>
-            ${convertDiffToTd(v.diffConfirmed)}
-            <td>${v.deaths}</td>
-            ${convertDiffToTd(v.diffDeaths)}
-            <td>${v.recovered}</td>
-            ${convertDiffToTd(v.diffRecovered, 1)}
-          </tr>`;
-        });
-
-        window.render.table({
-          id: "#countryTable",
-          lastUpdate: selectLast(pageData.country.timeseries, 1)[0].date,
-          tableRows: tableRows,
-          lengthMenu: [10, 30, 50, 100, 500],
-          pageLength: 30,
-          order: [[0, "desc"]]
+          country: pageData.country,
         });
       });
   } else {
+    title.html(`World Live Statistics`);
+
     $(".specific-row").show();
     $("#rowChartStacked").show();
 
-    $("body").on("map-selectRegion", function(event, countryCode) {
+    $("body").on("map-selectRegion", function (event, countryCode) {
       updateSelectedCountryCharts(pageData.scmpCountries[countryCode]);
     });
 
     fetchGeoip()
-      .then(res => handleGeoipResponse(res, pageData))
+      .then((res) => handleGeoipResponse(res, pageData))
       .then(fetchScmp)
-      .then(res => handleScmpResponse(res, pageData))
+      .then((res) => handleScmpResponse(res, pageData))
       .then(fetchTimeseries)
-      .then(res => handleTimeseriesResponse(res, pageData))
+      .then((res) => handleTimeseriesResponse(res, pageData))
       .then(() => {
         window.log = () => console.log(pageData);
         window.render.autocomplete({
           lookup: pageData.scmp.ac,
           id: "#autocomplete-dynamic",
-          onEnter: text => countriesModule.code(text)
+          onEnter: (text) => countriesModule.code(text),
         });
       });
   }
@@ -208,7 +127,7 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
     { value: pageData.scmp.stats.todayCases, title: "Today Cases" },
     { value: pageData.scmp.stats.critical, title: "Critical" },
     { value: pageData.scmp.stats.deaths, title: "Deaths" },
-    { value: pageData.scmp.stats.cases, title: "Cases" }
+    { value: pageData.scmp.stats.cases, title: "Cases" },
   ]);
 
   timeseriesResponse["United States"] = timeseriesResponse["US"];
@@ -220,7 +139,7 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
       tillYesterdayCountryMap[countryName] = {
         cases: 0,
         deaths: 0,
-        recovered: 0
+        recovered: 0,
       };
     }
 
@@ -233,7 +152,7 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
         mapByDate[dailyRow.date] = {
           cases: 0,
           deaths: 0,
-          recovered: 0
+          recovered: 0,
         };
       }
       mapByDate[dailyRow.date].cases += dailyRow.confirmed;
@@ -269,26 +188,26 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
 
   const fatalityRate =
     Number(((deathsLastDay / casesLastDay) * 100).toFixed(2)) + "%";
-  const lastGraphItems = 30;
+
   const graphOptions = {
-    title: `Impact over time (${lastGraphItems} Days)`,
+    title: `Impact over time (${ViewsConfig.Main.GRAPH_DAYS} Days)`,
     subtitle: fatalityRate,
     colors: ["#1b55e2", "#e7515a", "#3cba92"],
     series: [
       {
-        data: selectLast(seriesCases, lastGraphItems),
-        name: "Cases"
+        data: selectLast(seriesCases, ViewsConfig.Main.GRAPH_DAYS),
+        name: "Cases",
       },
       {
-        data: selectLast(seriesDeaths, lastGraphItems),
-        name: "Deaths"
+        data: selectLast(seriesDeaths, ViewsConfig.Main.GRAPH_DAYS),
+        name: "Deaths",
       },
       {
-        data: selectLast(seriesRecovered, lastGraphItems),
-        name: "Recovered"
-      }
+        data: selectLast(seriesRecovered, ViewsConfig.Main.GRAPH_DAYS),
+        name: "Recovered",
+      },
     ],
-    labels: selectLast(seriesLabels, lastGraphItems)
+    labels: selectLast(seriesLabels, ViewsConfig.Main.GRAPH_DAYS),
   };
   window.render.graph(graphOptions);
 
@@ -312,7 +231,7 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
       // Since countries are already sorted by cases, it should be the max assignment.
       pageData.mostImpactedCountry = {
         cases: value.cases,
-        overall: value.cases + value.recovered + value.deaths
+        overall: value.cases + value.recovered + value.deaths,
       };
       maxCasesNormalized = Math.ceil(value.cases / 50);
     }
@@ -326,7 +245,7 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
     } else {
     }
 
-    var tdDiff = prop => {
+    var tdDiff = (prop, pos) => {
       const prev =
         tillYesterdayCountryMap[value.country] ||
         tillYesterdayCountryMap[value.altName];
@@ -341,7 +260,7 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
         diff = v1 - v2;
       }
 
-      return convertDiffToTd(diff);
+      return convertDiffToTd(diff, pos);
     };
     const countryHref = `href="?country=${value.code}"`;
 
@@ -361,7 +280,7 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
     <td>${value.deaths}</td>
     ${tdDiff("deaths")}
     <td>${value.recovered}</td>
-    ${tdDiff("recovered")}
+    ${tdDiff("recovered", 1)}
     <td>${value.fatalityRate > 0 ? value.fatalityRate : "-"}</td>
     <td>${value.critical > 0 ? value.critical : "-"}</td>
   </tr>`;
@@ -382,7 +301,7 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
     tableRows: tableRows,
     lengthMenu: [10, 30, 50, 100, 500],
     pageLength: 50,
-    order: [[3, "desc"]]
+    order: [[3, "desc"]],
   });
 
   window.render.piechart({
@@ -393,25 +312,23 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
       pageData.scmp.stats.cases,
       pageData.scmp.stats.recovered,
       pageData.scmp.stats.unresolved,
-      pageData.scmp.stats.deaths
-    ]
+      pageData.scmp.stats.deaths,
+    ],
   });
 
-  const chartDays = 7;
-
   window.render.chart({
-    title: `Deaths vs. Recovered (${chartDays} Days)`,
-    categories: selectLast(seriesLabels, chartDays),
+    title: `Deaths vs. Recovered (${ViewsConfig.Main.COMPARE_CHART_DAYS} Days)`,
+    categories: selectLast(seriesLabels, ViewsConfig.Main.COMPARE_CHART_DAYS),
     series: [
       {
         name: "Deaths",
-        data: selectLast(seriesDeaths, chartDays)
+        data: selectLast(seriesDeaths, ViewsConfig.Main.COMPARE_CHART_DAYS),
       },
       {
         name: "Recovered",
-        data: selectLast(seriesRecovered, chartDays)
-      }
-    ]
+        data: selectLast(seriesRecovered, ViewsConfig.Main.COMPARE_CHART_DAYS),
+      },
+    ],
   });
 
   for (let con in pageData.scmp.continents) {
@@ -440,27 +357,27 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
         series: [
           {
             name: "Cases",
-            data: continentsByProperty(cc, "cases")
+            data: continentsByProperty(cc, "cases"),
           },
           {
             name: "Recovered",
-            data: continentsByProperty(cc, "recovered")
+            data: continentsByProperty(cc, "recovered"),
           },
 
           {
             name: "Fatality Rate",
-            data: continentsByProperty(cc, "fatalityRate")
+            data: continentsByProperty(cc, "fatalityRate"),
           },
           {
             name: "Deaths",
-            data: continentsByProperty(cc, "deaths")
+            data: continentsByProperty(cc, "deaths"),
           },
           {
             name: "Critical",
-            data: continentsByProperty(cc, "critical")
-          }
+            data: continentsByProperty(cc, "critical"),
+          },
         ],
-        categories: Object.keys(cc)
+        categories: Object.keys(cc),
       });
     };
 
@@ -486,7 +403,7 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
 Get Country Data
 =================================
 */
-const fetchCountry = cc => $.getJSON(`/api/country/${cc}`);
+const fetchCountry = (cc) => $.getJSON(`/api/country/${cc}`);
 const handleCountryResponse = (countryResponse, pageData) => {
   pageData.country = countryResponse.data;
 };
@@ -498,14 +415,19 @@ Get GeoIP Data
 const fetchGeoip = () =>
   $.ajax({
     dataType: "json",
-    url: "https://ipapi.co/json/"
+    url: "https://ipapi.co/json/",
   });
 
 const handleGeoipResponse = (geoipResponse, pageData) => {
   pageData.geoip = geoipResponse;
 };
 
-const updateSelectedCountryCharts = country => {
+/*
+=================================
+Selected country charts
+=================================
+*/
+const updateSelectedCountryCharts = (country) => {
   if (!country) {
     console.log("Could not find country");
     return;
@@ -530,29 +452,29 @@ const updateSelectedCountryCharts = country => {
       percent: Math.ceil(
         (country.cases / pageData.mostImpactedCountry.cases) * 100
       ),
-      title: "Cases"
+      title: "Cases",
     },
     {
       amount: country.deaths,
       percent: Math.ceil(
         (country.deaths / pageData.mostImpactedCountry.cases) * 100
       ),
-      title: "Deaths"
+      title: "Deaths",
     },
     {
       amount: country.recovered,
       percent: Math.ceil(
         (country.recovered / pageData.mostImpactedCountry.cases) * 100
       ),
-      title: "Recovered"
+      title: "Recovered",
     },
     {
       amount: overall,
       percent: Math.ceil(
         (overall / pageData.mostImpactedCountry.overall) * 100
       ),
-      title: "Overall Impacted"
-    }
+      title: "Overall Impacted",
+    },
   ].forEach((value, index) =>
     generateStat(index + 1, value.title, value.amount, value.percent)
   );
