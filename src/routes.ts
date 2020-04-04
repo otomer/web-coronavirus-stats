@@ -160,8 +160,25 @@ const fallbackCountries = (response: any) => {
         critical: value.total_serious_cases,
         deaths: value.total_deaths,
         recovered: value.total_recovered,
+        todayCases: value.total_new_cases_today,
+        todayDeaths: value.total_new_deaths_today,
         unresolved: value.total_unresolved,
       });
+      /*
+      FROM
+      {
+        code: "IL",
+        total_unresolved: 0,
+        total_active_cases: 7118,
+       }
+      TO
+      {
+        casesPerOneMillion: 907,
+        deathsPerOneMillion: 25,
+        totalTests: 1487493,
+        testsPerOneMillion: 4494
+        }
+      */
     }
   });
   return { data: altCountriesResponse };

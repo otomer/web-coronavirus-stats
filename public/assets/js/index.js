@@ -21,11 +21,11 @@ const convertDiffToTd = (diff, pos) => {
 };
 
 const ViewsConfig = {
-  Main: {
+  Country: {
     COMPARE_CHART_DAYS: 10,
     GRAPH_DAYS: 30,
   },
-  Country: {
+  Main: {
     COMPARE_CHART_DAYS: 10,
     GRAPH_DAYS: 30,
   },
@@ -33,12 +33,12 @@ const ViewsConfig = {
 
 $(document).ready(function () {
   window.pageData = {
-    geoip: {},
-    scmp: {},
-    timeseries: {},
-    scmpCountries: {},
     country: {},
+    geoip: {},
     mostImpactedCountry: null,
+    scmp: {},
+    scmpCountries: {},
+    timeseries: {},
   };
 
   // URL Params
@@ -58,11 +58,11 @@ $(document).ready(function () {
       })
       .then(() => {
         window.view.country({
-          selectors: {
-            title,
-            countryIndicator,
-          },
           country: pageData.country,
+          selectors: {
+            countryIndicator,
+            title,
+          },
         });
       });
   } else {
@@ -84,8 +84,8 @@ $(document).ready(function () {
       .then(() => {
         window.log = () => console.log(pageData);
         window.render.autocomplete({
-          lookup: pageData.scmp.ac,
           id: "#autocomplete-dynamic",
+          lookup: pageData.scmp.ac,
           onEnter: (text) => countriesModule.code(text),
         });
       });
@@ -123,11 +123,11 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
   const seriesLabels = [];
 
   window.render.counters([
-    { value: pageData.scmp.stats.todayDeaths, title: "Today Deaths" },
-    { value: pageData.scmp.stats.todayCases, title: "Today Cases" },
-    { value: pageData.scmp.stats.critical, title: "Critical" },
-    { value: pageData.scmp.stats.deaths, title: "Deaths" },
-    { value: pageData.scmp.stats.cases, title: "Cases" },
+    { title: "Today Deaths", value: pageData.scmp.stats.todayDeaths },
+    { title: "Today Cases", value: pageData.scmp.stats.todayCases },
+    { title: "Critical", value: pageData.scmp.stats.critical },
+    { title: "Deaths", value: pageData.scmp.stats.deaths },
+    { title: "Cases", value: pageData.scmp.stats.cases },
   ]);
 
   timeseriesResponse["United States"] = timeseriesResponse["US"];
@@ -190,9 +190,8 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
     Number(((deathsLastDay / casesLastDay) * 100).toFixed(2)) + "%";
 
   const graphOptions = {
-    title: `Impact over time (${ViewsConfig.Main.GRAPH_DAYS} Days)`,
-    subtitle: fatalityRate,
     colors: ["#1b55e2", "#e7515a", "#3cba92"],
+    labels: selectLast(seriesLabels, ViewsConfig.Main.GRAPH_DAYS),
     series: [
       {
         data: selectLast(seriesCases, ViewsConfig.Main.GRAPH_DAYS),
@@ -207,7 +206,8 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
         name: "Recovered",
       },
     ],
-    labels: selectLast(seriesLabels, ViewsConfig.Main.GRAPH_DAYS),
+    subtitle: fatalityRate,
+    title: `Impact over time (${ViewsConfig.Main.GRAPH_DAYS} Days)`,
   };
   window.render.graph(graphOptions);
 
@@ -298,37 +298,39 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
   window.render.table({
     id: "#countriesTable",
     lastUpdate: formatDate(new Date(pageData.scmp.last_updated)),
-    tableRows: tableRows,
     lengthMenu: [10, 30, 50, 100, 500],
-    pageLength: 50,
     order: [[3, "desc"]],
+    pageLength: 50,
+    tableRows: tableRows,
   });
 
   window.render.piechart({
-    title: "Impact so far",
-    labels: ["Cases", "Recovered", "Unresolved", "Deaths"],
     colors: ["#1b55e2", "#3cba92", "#e2a03f", "#e7515a"],
+    labels: ["Cases", "Recovered", "Unresolved", "Deaths"],
     series: [
       pageData.scmp.stats.cases,
       pageData.scmp.stats.recovered,
       pageData.scmp.stats.unresolved,
       pageData.scmp.stats.deaths,
     ],
+    title: "Impact so far",
   });
 
   window.render.chart({
-    title: `Deaths vs. Recovered (${ViewsConfig.Main.COMPARE_CHART_DAYS} Days)`,
     categories: selectLast(seriesLabels, ViewsConfig.Main.COMPARE_CHART_DAYS),
+    colors: ["#5c1ac3", "#ffbb44"],
+    id: "#basicChart",
     series: [
       {
-        name: "Deaths",
         data: selectLast(seriesDeaths, ViewsConfig.Main.COMPARE_CHART_DAYS),
+        name: "Deaths",
       },
       {
-        name: "Recovered",
         data: selectLast(seriesRecovered, ViewsConfig.Main.COMPARE_CHART_DAYS),
+        name: "Recovered",
       },
     ],
+    title: `Deaths vs. Recovered (${ViewsConfig.Main.COMPARE_CHART_DAYS} Days)`,
   });
 
   for (let con in pageData.scmp.continents) {
@@ -352,49 +354,53 @@ const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
       };
 
       window.render.compareChart({
+        categories: Object.keys(cc),
         id: id,
-        title: title,
         series: [
           {
-            name: "Cases",
             data: continentsByProperty(cc, "cases"),
+            name: "Cases",
           },
           {
-            name: "Recovered",
             data: continentsByProperty(cc, "recovered"),
+            name: "Recovered",
           },
 
           {
-            name: "Fatality Rate",
             data: continentsByProperty(cc, "fatalityRate"),
+            name: "Fatality Rate",
           },
           {
-            name: "Deaths",
             data: continentsByProperty(cc, "deaths"),
+            name: "Deaths",
           },
           {
-            name: "Critical",
             data: continentsByProperty(cc, "critical"),
+            name: "Critical",
           },
         ],
-        categories: Object.keys(cc),
+        title: title,
       });
     };
 
     const cc1 = {};
     const cc2 = {};
+    const cc3 = {};
 
     let i = 0;
     for (let con in pageData.scmp.continents) {
       if (i < 3) {
         cc1[con] = pageData.scmp.continents[con];
-      } else {
+      } else if (i < 6) {
         cc2[con] = pageData.scmp.continents[con];
+      } else {
+        cc3[con] = pageData.scmp.continents[con];
       }
       i++;
     }
     renderContinents("#chartColumnStacked-1", cc1, "Top Continents");
     renderContinents("#chartColumnStacked-2", cc2, "Other Continents");
+    renderContinents("#chartColumnStacked-3", cc3, "Other Continents");
   };
   renderChartContinents();
 };

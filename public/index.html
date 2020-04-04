@@ -328,7 +328,7 @@ L82,35.7z"
                 </div>
 
                 <div class="widget-content">
-                  <div id="uniqueVisits"></div>
+                  <div id="basicChart"></div>
                 </div>
               </div>
             </div>
@@ -381,7 +381,7 @@ L82,35.7z"
 
           <!--  BEGIN STACKED CHARTS  -->
           <div class="row" id="rowChartStacked" style="display: none;">
-            <div class="col-xl-6 layout-spacing" id="chartColumnStacked-1">
+            <div class="col-xl-4 layout-spacing" id="chartColumnStacked-1">
               <div class="statbox widget box box-shadow">
                 <div class="widget-header">
                   <div class="row">
@@ -395,7 +395,21 @@ L82,35.7z"
                 </div>
               </div>
             </div>
-            <div class="col-xl-6 layout-spacing" id="chartColumnStacked-2">
+            <div class="col-xl-4 layout-spacing" id="chartColumnStacked-2">
+              <div class="statbox widget box box-shadow">
+                <div class="widget-header">
+                  <div class="row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                      <h4 class="stacked-title"></h4>
+                    </div>
+                  </div>
+                </div>
+                <div class="widget-content">
+                  <div class="s-col-stacked"></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-4 layout-spacing" id="chartColumnStacked-3">
               <div class="statbox widget box box-shadow">
                 <div class="widget-header">
                   <div class="row">
@@ -733,6 +747,7 @@ L82,35.7z"
     <script src="assets/js/render-table.js"></script>
     <script src="assets/js/render-comparechart.js"></script>
     <script src="assets/js/render-autocomplete.js"></script>
+    <script src="assets/js/render-chart.js"></script>
     <script src="assets/js/view-country.js"></script>
 
     <script src="assets/js/custom.js"></script>
@@ -764,7 +779,6 @@ L82,35.7z"
     <!--  BEGIN CUSTOM SCRIPTS FILE  -->
     <script src="plugins/jvector/jvector_script.js"></script>
     <!--  END CUSTOM SCRIPTS FILE  -->
-    <script src="assets/js/widgets/modules-widgets.js"></script>
     <script src="plugins/autocomplete/jquery.autocomplete.js"></script>
   </body>
 </html>

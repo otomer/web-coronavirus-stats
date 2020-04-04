@@ -14,19 +14,20 @@
     window.render.loaded();
 
     window.render.autocomplete({
-      lookup: country.ac,
       id: "#autocomplete-dynamic",
+      lookup: country.ac,
       onEnter: (text) => countriesModule.code(text),
     });
 
     window.render.counters([
       {
-        value: country.cases,
         title: "Cases",
+        value: country.cases,
       },
-      { value: country.critical, title: "Critical" },
-      { value: country.deaths, title: "Deaths" },
-      { value: country.fatalityRate, title: "Fatality Rate" },
+      { title: "Critical", value: country.critical },
+      { title: "Deaths", value: country.deaths },
+      { title: "Fatality Rate", value: country.fatalityRate },
+      { title: "Unresolved", value: country.unresolved },
     ]);
     const fatalityRate = Number(country.fatalityRate) + "%";
     const tsGraph = selectLast(
@@ -34,9 +35,8 @@
       ViewsConfig.Country.GRAPH_DAYS
     );
     window.render.graph({
-      title: `Impact over time (${ViewsConfig.Country.GRAPH_DAYS} Days)`,
       colors: ["#1b55e2", "#e7515a", "#3cba92"],
-      subtitle: fatalityRate,
+      labels: tsGraph.map((c) => c.date),
       series: [
         {
           data: tsGraph.map((c) => c.confirmed),
@@ -51,19 +51,20 @@
           name: "Recovered",
         },
       ],
-      labels: tsGraph.map((c) => c.date),
+      subtitle: fatalityRate,
+      title: `Impact over time (${ViewsConfig.Country.GRAPH_DAYS} Days)`,
     });
 
     window.render.piechart({
-      title: "Impact so far",
-      labels: ["Cases", "Recovered", "Unresolved", "Deaths"],
       colors: ["#1b55e2", "#3cba92", "#e2a03f", "#e7515a"],
+      labels: ["Cases", "Recovered", "Unresolved", "Deaths"],
       series: [
         country.cases,
         country.recovered,
         country.unresolved,
         country.deaths,
       ],
+      title: "Impact so far",
     });
 
     const tsPiechart = selectLast(
@@ -71,18 +72,24 @@
       ViewsConfig.Country.COMPARE_CHART_DAYS
     );
     window.render.chart({
-      title: `Deaths vs. Recovered (Last ${ViewsConfig.Country.COMPARE_CHART_DAYS} Days)`,
       categories: tsPiechart.map((c) => c.date),
+      colors: ["#5c1ac3", "#ffbb44"],
+      id: "#basicChart",
       series: [
         {
-          name: "Deaths",
           data: tsPiechart.map((c) => c.deaths),
+          name: "Deaths",
         },
         {
-          name: "Recovered",
           data: tsPiechart.map((c) => c.recovered),
+          name: "Recovered",
         },
+        // {
+        //   data: tsPiechart.map((c) => c.confirmed),
+        //   name: "Confirmed",
+        // },
       ],
+      title: `Deaths vs. Recovered (Last ${ViewsConfig.Country.COMPARE_CHART_DAYS} Days)`,
     });
 
     let tableRows = "";
@@ -102,10 +109,10 @@
     window.render.table({
       id: "#countryTable",
       lastUpdate: selectLast(country.timeseries, 1)[0].date,
-      tableRows: tableRows,
       lengthMenu: [10, 30, 50, 100, 500],
-      pageLength: 30,
       order: [[0, "desc"]],
+      pageLength: 30,
+      tableRows: tableRows,
     });
   };
 
