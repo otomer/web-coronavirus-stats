@@ -8,8 +8,8 @@
       name="viewport"
     />
     <meta
-      name="description"
       content="Live statistics and coronavirus news tracking the number of confirmed cases, recovered patients, and death toll by country due to the COVID 19 coronavirus pandemic 2019–20 from Wuhan, China. Coronavirus counter with new cases, historical data, and info. Daily charts, graphs, news and updates"
+      name="description"
     />
     <title>
       Coronavirus Pandemic (COVID-19 disease) Live Reports & Statistics
@@ -38,9 +38,9 @@
       type="text/css"
     />
     <link
+      href="assets/css/widgets/modules-widgets.css"
       rel="stylesheet"
       type="text/css"
-      href="assets/css/widgets/modules-widgets.css"
     />
     <link
       href="plugins/table/datatable/datatables.css"
@@ -77,19 +77,19 @@
       .jvectormap-zoomin,
       .jvectormap-zoomout,
       .jvectormap-goback {
-        left: 20px;
-        border-radius: 50%;
         background: #ffffff;
-        padding: 6px 6px;
-        color: #3b3f5c;
         border: 2px solid #3b3f5c;
+        border-radius: 50%;
+        color: #3b3f5c;
         font-size: 19px;
         font-weight: 700;
+        left: 20px;
+        padding: 6px 6px;
         top: 20px;
       }
       .jvectormap-zoomout {
-        top: 20px;
         left: 50px;
+        top: 20px;
       }
     </style>
 
@@ -124,24 +124,24 @@
     <div class="header-container">
       <header class="header navbar navbar-expand-sm">
         <a
-          href="javascript:void(0);"
           class="sidebarCollapse"
           data-placement="bottom"
+          href="javascript:void(0);"
           ><svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
+            class="feather feather-menu"
             fill="none"
-            stroke="currentColor"
-            stroke-width="2"
+            height="24"
             stroke-linecap="round"
             stroke-linejoin="round"
-            class="feather feather-menu"
+            stroke-width="2"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line></svg
+            <line x1="3" x2="21" y1="12" y2="12"></line>
+            <line x1="3" x2="21" y1="6" y2="6"></line>
+            <line x1="3" x2="21" y1="18" y2="18"></line></svg
         ></a>
 
         <div class="nav-logo align-self-center">
@@ -159,27 +159,27 @@
             >
               <div class="search-bar">
                 <input
-                  id="autocomplete-dynamic"
-                  type="text"
                   class="form-control search-form-control ml-lg-auto"
+                  id="autocomplete-dynamic"
                   placeholder="Search a Country..."
+                  type="text"
                 />
               </div>
             </form>
             <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
+              class="feather feather-search toggle-search"
               fill="none"
-              stroke="currentColor"
-              stroke-width="2"
+              height="24"
               stroke-linecap="round"
               stroke-linejoin="round"
-              class="feather feather-search toggle-search"
+              stroke-width="2"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
             >
               <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              <line x1="21" x2="16.65" y1="21" y2="16.65"></line>
             </svg>
           </li>
         </ul>
@@ -189,14 +189,14 @@
             class="nav-item dropdown user-profile-dropdown order-lg-0 order-1"
           >
             <a
-              style="cursor: default;"
-              class="nav-link dropdown-toggle user"
-              id="user-profile-dropdown"
-              data-toggle="dropdown"
-              aria-haspopup="true"
               aria-expanded="false"
+              aria-haspopup="true"
+              class="nav-link dropdown-toggle user"
+              data-toggle="dropdown"
+              id="user-profile-dropdown"
+              style="cursor: default;"
             >
-              <div id="countryIndicator" class="media">
+              <div class="media" id="countryIndicator">
                 🌎&nbsp;
                 <div class="media-body align-self-center">
                   <h6><span>World</span></h6>
@@ -214,59 +214,59 @@
       <div class="loader">
         <div class="loader-content">
           <svg
-            version="1.1"
-            id="L7"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            x="0px"
-            y="0px"
-            viewBox="0 0 100 100"
             enable-background="new 0 0 100 100"
+            id="L7"
+            version="1.1"
+            viewBox="0 0 100 100"
+            x="0px"
             xml:space="preserve"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            xmlns="http://www.w3.org/2000/svg"
+            y="0px"
           >
             <path
-              fill="#fff"
               d="M31.6,3.5C5.9,13.6-6.6,42.7,3.5,68.4c10.1,25.7,39.2,38.3,64.9,28.1l-3.1-7.9c-21.3,8.4-45.4-2-53.8-23.3
 c-8.4-21.3,2-45.4,23.3-53.8L31.6,3.5z"
+              fill="#fff"
             >
               <animateTransform
                 attributeName="transform"
                 attributeType="XML"
-                type="rotate"
                 dur="2s"
                 from="0 50 50"
-                to="360 50 50"
                 repeatCount="indefinite"
+                to="360 50 50"
+                type="rotate"
               />
             </path>
             <path
-              fill="#fff"
               d="M42.3,39.6c5.7-4.3,13.9-3.1,18.1,2.7c4.3,5.7,3.1,13.9-2.7,18.1l4.1,5.5c8.8-6.5,10.6-19,4.1-27.7
 c-6.5-8.8-19-10.6-27.7-4.1L42.3,39.6z"
+              fill="#fff"
             >
               <animateTransform
                 attributeName="transform"
                 attributeType="XML"
-                type="rotate"
                 dur="1s"
                 from="0 50 50"
-                to="-360 50 50"
                 repeatCount="indefinite"
+                to="-360 50 50"
+                type="rotate"
               />
             </path>
             <path
-              fill="#fff"
               d="M82,35.7C74.1,18,53.4,10.1,35.7,18S10.1,46.6,18,64.3l7.6-3.4c-6-13.5,0-29.3,13.5-35.3s29.3,0,35.3,13.5
 L82,35.7z"
+              fill="#fff"
             >
               <animateTransform
                 attributeName="transform"
                 attributeType="XML"
-                type="rotate"
                 dur="2s"
                 from="0 50 50"
-                to="360 50 50"
                 repeatCount="indefinite"
+                to="360 50 50"
+                type="rotate"
               />
             </path>
           </svg>
@@ -285,7 +285,7 @@ L82,35.7z"
         <nav id="topbar">
           <ul class="navbar-nav theme-brand flex-row text-center">
             <li class="nav-item theme-text">
-              <a href="/" class="nav-link"> Coronavirus </a>
+              <a class="nav-link" href="/"> Coronavirus </a>
             </li>
           </ul>
         </nav>
@@ -340,7 +340,7 @@ L82,35.7z"
             >
               <div class="widget widget-chart-two">
                 <div class="widget-heading">
-                  <h5 id="pieChartTitle" class=""></h5>
+                  <h5 class="" id="pieChartTitle"></h5>
                 </div>
                 <div class="widget-content">
                   <div class="" id="worldImpactPie"></div>
@@ -360,7 +360,7 @@ L82,35.7z"
                   <h5 class="mainGraphTitle"></h5>
                   <ul class="tabs tab-pills">
                     <li>
-                      <a href="javascript:void(0);" id="tb_1" class="tabmenu"
+                      <a class="tabmenu" href="javascript:void(0);" id="tb_1"
                         >Daily</a
                       >
                     </li>
@@ -369,7 +369,7 @@ L82,35.7z"
 
                 <div class="widget-content">
                   <div class="tabs tab-content">
-                    <div id="content_1" class="tabcontent">
+                    <div class="tabcontent" id="content_1">
                       <div id="mainGraph"></div>
                     </div>
                   </div>
@@ -379,45 +379,12 @@ L82,35.7z"
             <!--  END MAIN GRAPH  -->
           </div>
 
-          <!--  BEGIN STACKED CHARTS  -->
-          <div id="rowChartStacked" class="row" style="display: none;">
-            <div id="chartColumnStacked-1" class="col-xl-6 layout-spacing">
-              <div class="statbox widget box box-shadow">
-                <div class="widget-header">
-                  <div class="row">
-                    <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                      <h4 class="stacked-title"></h4>
-                    </div>
-                  </div>
-                </div>
-                <div class="widget-content">
-                  <div class="s-col-stacked" class=""></div>
-                </div>
-              </div>
-            </div>
-            <div id="chartColumnStacked-2" class="col-xl-6 layout-spacing">
-              <div class="statbox widget box box-shadow">
-                <div class="widget-header">
-                  <div class="row">
-                    <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                      <h4 class="stacked-title"></h4>
-                    </div>
-                  </div>
-                </div>
-                <div class="widget-content">
-                  <div class="s-col-stacked" class=""></div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!--  END STACKED CHARTS  -->
-
           <div class="row specific-row" id="cancel-row" style="display: none;">
             <!--  BEGIN SELECT CHART  -->
             <div
               class="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing"
             >
-              <div id="selectedCountryCharts" class="widget-four">
+              <div class="widget-four" id="selectedCountryCharts">
                 <div class="widget-heading">
                   <h5 class="country-name"></h5>
                 </div>
@@ -538,16 +505,16 @@ L82,35.7z"
                     <div class="browser-list">
                       <div class="w-icon">
                         <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
+                          class="feather feather-users"
                           fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
+                          height="24"
                           stroke-linecap="round"
                           stroke-linejoin="round"
-                          class="feather feather-users"
+                          stroke-width="2"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          width="24"
+                          xmlns="http://www.w3.org/2000/svg"
                         >
                           <path
                             d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"
@@ -677,9 +644,9 @@ L82,35.7z"
               <p class="">
                 Copyright © 2020,
                 <a
-                  target="_blank"
                   class="footer-link"
                   href="https://www.tomerovadia.com"
+                  target="_blank"
                   >tomerovadia.com</a
                 >
                 All rights reserved
