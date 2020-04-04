@@ -155,6 +155,7 @@ const fallbackCountries = (response: any) => {
         active: value.total_active_cases,
         cases: value.total_cases,
         casesPerOneMillion: -1,
+        code: value.code,
         country: value.title,
         critical: value.total_serious_cases,
         deaths: value.total_deaths,
