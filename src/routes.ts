@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 const express = require("express");
 const axios = require("axios");
 const resources = require("./resources");
-const { flag, code } = require("country-emoji");
+const { code, flag } = require("country-emoji");
 const redis = require("./redis");
 const utils = require("./utils");
 
@@ -18,7 +18,7 @@ const setRoute = (path: string, data: Function) =>
   router.get(path, (req: Request, res: Response) =>
     res.status(200).send({
       data: data(),
-      success: true
+      success: true,
     })
   );
 
@@ -38,16 +38,16 @@ const continents: any = {};
 let timeseries: any = {};
 
 const CacheConfig = {
-  WORLD: {
-    key: "/api/world",
-    refreshMilliseconds: 1000 * 60 * 30, //30 minutes
-    maxFactor: 2
-  },
   TIMESERIES: {
     key: "/api/timeseries",
-    refreshMilliseconds: 1000 * 60 * 30, //30 minutes
-    maxFactor: 2
-  }
+    maxFactor: 2,
+    refreshMilliseconds: 1000 * 30 * 60, //30 minutes
+  },
+  WORLD: {
+    key: "/api/world",
+    maxFactor: 2,
+    refreshMilliseconds: 1000 * 30 * 60, //30 minutes
+  },
 };
 
 /**
@@ -80,8 +80,8 @@ const getTimeseriesData = () =>
           }
           cTimeseries[newProp] = response.data[prop];
           let prevDay: {
-            date: string;
             confirmed: number;
+            date: string;
             deaths: number;
             recovered: number;
           };
@@ -108,7 +108,7 @@ const getTimeseriesData = () =>
 const cron = (config: any, cb: Function) => {
   // Callback to set data in cache
   const setCallbackAsync = (data: any) => {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       resolve(data);
     });
   };
@@ -145,16 +145,40 @@ const cron = (config: any, cb: Function) => {
   retrieve("LoadData");
 };
 
+const fallbackCountries = (response: any) => {
+  let countriesResponse = response.data.countryitems[0];
+  let altCountriesResponse: any = [];
+  Object.keys(countriesResponse).forEach(function (key) {
+    if (key !== "stat" && key !== "stats") {
+      const value = countriesResponse[key];
+      altCountriesResponse.push({
+        active: value.total_active_cases,
+        cases: value.total_cases,
+        casesPerOneMillion: -1,
+        country: value.title,
+        critical: value.total_serious_cases,
+        deaths: value.total_deaths,
+        recovered: value.total_recovered,
+        unresolved: value.total_unresolved,
+      });
+    }
+  });
+  return { data: altCountriesResponse };
+};
+
 const getWorldData = () =>
   axios
     .all([
       axios.get(resources.scmp),
-      axios.get(resources.countries),
-      axios.get(resources.allStats)
+      // axios.get(resources.countries),
+      axios.get(resources.vtcountries), //FALLBACK: Countries
+      axios.get(resources.allStats),
     ])
     .then((responseArr: any) => {
       const scmpResponse = responseArr[0];
-      const countriesResponse = responseArr[1];
+      // const countriesResponse = responseArr[1];
+      const countriesResponse = fallbackCountries(responseArr[1]); // FALLBACK: Countries parsing
+
       const stats = responseArr[2];
       const tempMap: any = {};
 
@@ -187,13 +211,13 @@ const getWorldData = () =>
       );
 
       const extraStats = {
-        countriesImpacted: 0,
-        countriesDeaths: 0,
         active: 0,
+        countriesDeaths: 0,
+        countriesImpacted: 0,
         critical: 0,
-        todayDeaths: 0,
         todayCases: 0,
-        unresolved: stats.data.cases - stats.data.deaths - stats.data.recovered
+        todayDeaths: 0,
+        unresolved: stats.data.cases - stats.data.deaths - stats.data.recovered,
       };
 
       countries.forEach((value: any, index: number, array: any) => {
@@ -243,7 +267,7 @@ const getWorldData = () =>
           return {
             ac: countriesAutocomplete,
             timeseries: timeseries[value.country] || [],
-            ...value
+            ...value,
           };
         });
 
@@ -253,8 +277,8 @@ const getWorldData = () =>
 
         if (!f) {
           countriesAutocomplete.push({
+            data: value.code,
             value: `${value.flag} ${value.country}`,
-            data: value.code
           });
         }
 
@@ -263,13 +287,13 @@ const getWorldData = () =>
 
         if (!continents[continent]) {
           continents[continent] = {
-            cases: 0,
-            deaths: 0,
-            recovered: 0,
-            critical: 0,
             active: 0,
+            cases: 0,
+            critical: 0,
+            deaths: 0,
+            fatalityRate: 0,
+            recovered: 0,
             unresolved: 0,
-            fatalityRate: 0
           };
         }
         continents[continent].cases += value.cases >= 0 ? value.cases : 0;
@@ -285,14 +309,14 @@ const getWorldData = () =>
 
       scmpResponse.data.stats = {
         ...stats.data,
-        ...extraStats
+        ...extraStats,
       };
       scmpResponse.data.ac = countriesAutocomplete;
       scmpResponse.data.continents = continents;
       return scmpResponse.data;
     })
     .catch((error: Error) => {
-      console.log(error);
+      console.error(error);
     });
 
 /**
