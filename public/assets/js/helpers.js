@@ -3,7 +3,7 @@
 Format date as datetime string
 =================================
 */
-const formatDate = date => {
+const formatDate = (date) => {
   var hours = date.getHours();
   var minutes = date.getMinutes();
   var ampm = hours >= 12 ? "pm" : "am";
@@ -11,8 +11,9 @@ const formatDate = date => {
   hours = hours ? hours : 12; // the hour '0' should be '12'
   minutes = minutes < 10 ? "0" + minutes : minutes;
   var strTime = hours + ":" + minutes + " " + ampm;
-  return `${date.getMonth() +
-    1}/${date.getDate()}/${date.getFullYear()} ${strTime}`;
+  return `${
+    date.getMonth() + 1
+  }/${date.getDate()}/${date.getFullYear()} ${strTime}`;
 };
 
 /*
@@ -20,10 +21,10 @@ const formatDate = date => {
 Numbers Formatting
 =================================
 */
-const numberWithCommas = x =>
+const numberWithCommas = (x) =>
   x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
-const parseCommaNumber = x => parseInt(parseFloat(x.replace(/,/g, "")));
+const parseCommaNumber = (x) => parseInt(parseFloat(x.replace(/,/g, "")));
 
 /*
 =================================
@@ -33,7 +34,7 @@ URL Utils
 
 function getUrlVars() {
   var vars = {};
-  var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(
+  var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (
     m,
     key,
     value
@@ -46,3 +47,25 @@ function getUrlVars() {
 function selectLast(arr, i) {
   return arr.slice(Math.max(arr.length - i, 0));
 }
+
+const convertDiffToTd = (diff, pos) => {
+  let txt = "-",
+    cls = "";
+
+  if (diff === 0) {
+    txt = "-";
+    cls = "";
+  } else if (diff > 0) {
+    txt = "+" + diff;
+    if (pos) {
+      cls = "decrease";
+    } else {
+      cls = "increase";
+    }
+  } else if (diff < 0) {
+    txt = "" + diff;
+    cls = "decrease";
+  }
+
+  return `<td class="${cls}">${txt}</td>`;
+};

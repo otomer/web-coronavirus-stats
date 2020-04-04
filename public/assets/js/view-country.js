@@ -1,16 +1,23 @@
 (function () {
+  const ViewsConfig = {
+    Country: {
+      COMPARE_CHART_DAYS: 10,
+      GRAPH_DAYS: 30,
+    },
+  };
+
   const init = (options) => {
     const country = options.country;
-    const title = options.selectors.title;
-    const countryIndicator = options.selectors.countryIndicator;
 
     $("#rowChartStacked").hide();
-    title.html(`${country.country} Live Statistics`);
-    countryIndicator.html(`${country.flag}&nbsp;
+
+    options.selectors.title.html(`${country.country} Live Statistics`);
+    options.selectors.countryIndicator.html(`${country.flag}&nbsp;
         <div class="media-body align-self-center">
           <h6>${country.country}</h6>
         </div>`);
 
+    //Remove loader
     window.render.loaded();
 
     window.render.autocomplete({
@@ -116,7 +123,9 @@
     });
   };
 
-  window.view = {
-    country: init,
-  };
+  if (!window.view) {
+    window.view = {};
+  }
+
+  window.view.country = init;
 })();
