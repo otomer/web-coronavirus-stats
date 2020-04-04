@@ -17,6 +17,7 @@ Lean more about
 
 - TypeScript
 - Node.js
+- Redis
 
 ### Frontend:
 
