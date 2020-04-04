@@ -167,19 +167,23 @@ const fallbackCountries = (response: any) => {
   return { data: altCountriesResponse };
 };
 
+const applyFallback = false;
+const countriesUrl = applyFallback
+  ? resources.vtcountries
+  : resources.countries;
+
 const getWorldData = () =>
   axios
     .all([
       axios.get(resources.scmp),
-      // axios.get(resources.countries),
-      axios.get(resources.vtcountries), //FALLBACK: Countries
+      axios.get(countriesUrl),
       axios.get(resources.allStats),
     ])
     .then((responseArr: any) => {
       const scmpResponse = responseArr[0];
-      // const countriesResponse = responseArr[1];
-      const countriesResponse = fallbackCountries(responseArr[1]); // FALLBACK: Countries parsing
-
+      const countriesResponse = applyFallback
+        ? fallbackCountries(responseArr[1])
+        : responseArr[1];
       const stats = responseArr[2];
       const tempMap: any = {};
 
