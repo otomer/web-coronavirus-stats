@@ -64,7 +64,6 @@ const getTimeseriesData = () =>
         if (response.data.hasOwnProperty(prop)) {
           let newProp;
 
-          console.log(prop);
           switch (prop) {
             case "Czechia":
               newProp = "Czech Republic";

@@ -6,6 +6,64 @@
     },
   };
 
+  /*
+=================================
+Selected country charts
+=================================
+*/
+  const updateSelectedCountryCharts = (country) => {
+    if (!country) {
+      console.log("Could not find country");
+      return;
+    }
+
+    const selectedCountryCharts = $("#selectedCountryCharts");
+    selectedCountryCharts
+      .find(".country-name")
+      .html(`${countriesModule.flag(country.country)} ${country.country}`);
+
+    const generateStat = (idx, text, val, percent) => {
+      $(`.stat-title-${idx}`).html(text);
+      $(`.stat-count-${idx}`).html(numberWithCommas(val));
+      $(`.stat-progress-${idx}`).css("width", `${percent}%`);
+    };
+
+    const overall = country.recovered + country.deaths + country.cases;
+    //Statistic bars for selected country
+    [
+      {
+        amount: country.cases,
+        percent: Math.ceil(
+          (country.cases / pageData.mostImpactedCountry.cases) * 100
+        ),
+        title: "Cases",
+      },
+      {
+        amount: country.deaths,
+        percent: Math.ceil(
+          (country.deaths / pageData.mostImpactedCountry.cases) * 100
+        ),
+        title: "Deaths",
+      },
+      {
+        amount: country.recovered,
+        percent: Math.ceil(
+          (country.recovered / pageData.mostImpactedCountry.cases) * 100
+        ),
+        title: "Recovered",
+      },
+      {
+        amount: overall,
+        percent: Math.ceil(
+          (overall / pageData.mostImpactedCountry.overall) * 100
+        ),
+        title: "Overall Impacted",
+      },
+    ].forEach((value, index) =>
+      generateStat(index + 1, value.title, value.amount, value.percent)
+    );
+  };
+
   const init = (options) => {
     const pageData = options.pageData;
     const timeseriesResponse = pageData.timeseries;
