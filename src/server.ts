@@ -2,9 +2,10 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const secure = require("express-force-https");
 import logger = require("morgan");
-var redis = require("./redis");
 
 import { Request, Response } from "express";
+
+import redis from "./redis";
 
 /**
  * Initialization
@@ -14,7 +15,7 @@ redis.test();
 
 const config = {
   PORT: process.env.PORT || 3000,
-  STARTED: new Date().toString()
+  STARTED: new Date().toString(),
 };
 
 /**
@@ -37,17 +38,17 @@ app.get("/config", (req: Request, res: Response) =>
   res.send({
     ...config,
     REDIS: {
-      status: redisClient.status,
       host: redisClient.options.host,
-      port: redisClient.options.port
-    }
+      port: redisClient.options.port,
+      status: redisClient.status,
+    },
   })
 );
 
 function getTimeAsync() {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     resolve({
-      date: new Date()
+      date: new Date(),
     });
   });
 }
@@ -59,7 +60,7 @@ app.get("/redis", (req: Request, res: Response) => {
 app.get("/", (req: Request, res: Response) =>
   res.sendFile("index.html", { root: "public" })
 );
-app.get("*", function(req: Request, res: Response) {
+app.get("*", function (req: Request, res: Response) {
   res.status(404);
   res.sendFile("404.html", { root: "public" });
 });

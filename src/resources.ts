@@ -16,4 +16,4 @@ const resources = {
     `https://coronavirus-19-api.herokuapp.com/countries/${name}`,
 };
 
-module.exports = resources;
+export default resources;

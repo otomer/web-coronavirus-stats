@@ -1,10 +1,12 @@
 import { Request, Response } from "express";
-const express = require("express");
-const axios = require("axios");
-const resources = require("./resources");
+
+import axios from "axios";
+import express from "express";
+import redis from "./redis";
+import resources from "./resources";
+import utils from "./utils";
+
 const { code, flag } = require("country-emoji");
-const redis = require("./redis");
-const utils = require("./utils");
 
 /**
  * Router Definition

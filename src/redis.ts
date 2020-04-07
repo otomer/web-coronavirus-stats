@@ -1,48 +1,12 @@
 const Redis = require("ioredis");
-const utils = require("./utils");
 
 import { Response } from "express";
+import utils from "./utils";
 
 let redisUrl = process.env.REDIS_URL || "redis://127.0.0.1";
 let redisClient: any, client: any, redis: any;
 
 const redisUtils = {
-  client: () => {
-    if (!redisClient) {
-      redisClient = require("redis").createClient(redisUrl);
-      redis = new Redis(redisUrl);
-    }
-
-    return redisClient;
-  },
-  test: () => {
-    if (!redisClient) {
-      redisUtils.client();
-    }
-    const SAMPLE_REDIS_KEY = "test";
-    const val = "Yep, Redis works! 👌";
-    redisClient.set(SAMPLE_REDIS_KEY, val);
-    console.log("Redis tested.");
-    return val;
-  },
-  set: (key: string, cb: Function, expirationSeconds: number) => {
-    return cb().then((resultObject: any) => {
-      utils.log(
-        `[Cache:Set] '${key}' for ${utils.millisToMinutesAndSeconds(
-          1000 * expirationSeconds
-        )} minutes`,
-        "⏳"
-      );
-
-      redisClient.set(
-        key,
-        JSON.stringify(resultObject),
-        "EX",
-        expirationSeconds
-      );
-      return resultObject;
-    });
-  },
   cache: (
     key: string,
     cb: any,
@@ -71,7 +35,43 @@ const redisUtils = {
           );
         }
       }
-    })
+    }),
+  client: () => {
+    if (!redisClient) {
+      redisClient = require("redis").createClient(redisUrl);
+      redis = new Redis(redisUrl);
+    }
+
+    return redisClient;
+  },
+  set: (key: string, cb: Function, expirationSeconds: number) => {
+    return cb().then((resultObject: any) => {
+      utils.log(
+        `[Cache:Set] '${key}' for ${utils.millisToMinutesAndSeconds(
+          1000 * expirationSeconds
+        )} minutes`,
+        "⏳"
+      );
+
+      redisClient.set(
+        key,
+        JSON.stringify(resultObject),
+        "EX",
+        expirationSeconds
+      );
+      return resultObject;
+    });
+  },
+  test: () => {
+    if (!redisClient) {
+      redisUtils.client();
+    }
+    const SAMPLE_REDIS_KEY = "test";
+    const val = "Yep, Redis works! 👌";
+    redisClient.set(SAMPLE_REDIS_KEY, val);
+    console.log("Redis tested.");
+    return val;
+  },
 };
 
-module.exports = redisUtils;
+export default redisUtils;
