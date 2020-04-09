@@ -35,13 +35,13 @@ const createCachableRoute = (config: any, cb: any) =>
   );
 
 // Controllers
-let countriesAutocomplete: any = [];
-const continents: any = {};
-let timeseries: any = {};
+const _countriesAutocomplete: any = [];
+const _continents: any = {};
+let _countriesDailyStatsMap: any = {};
 
 const CacheConfig = {
-  TIMESERIES: {
-    key: "/api/timeseries",
+  COUNTRIES_DAILY: {
+    key: "/api/countries",
     maxFactor: 2,
     refreshMilliseconds: 1000 * 30 * 60, //30 minutes
   },
@@ -56,57 +56,40 @@ const CacheConfig = {
  * Data Retrieval
  */
 
-const getTimeseriesData = () =>
+const getCountriesDailyStatistics = () =>
   axios
-    .get(resources.timeseries)
+    .get(resources.countriesDailyStatistics)
     .then((response: any) => {
-      const cTimeseries: any = {};
-      // handle success
-      for (var prop in response.data) {
-        if (response.data.hasOwnProperty(prop)) {
-          let newProp;
+      const countriesDailyStatsMap: any = {};
 
-          switch (prop) {
-            case "Czechia":
-              newProp = "Czech Republic";
-              break;
-            case "Korea, South":
-              newProp = "South Korea";
-              break;
-            case "Mainland China":
-              newProp = "China";
-              break;
-            case "US":
-            case "USA":
-              newProp = "United States";
-              break;
-            default:
-              newProp = prop;
-          }
-          if (prop.indexOf("*") !== -1) {
-            newProp = prop.split("*").join("");
-          }
-          cTimeseries[newProp] = response.data[prop];
-          let prevDay: {
+      for (var countryName in response.data) {
+        if (response.data.hasOwnProperty(countryName)) {
+          let newCountryName = utils.countryNameAlign(countryName);
+          countriesDailyStatsMap[newCountryName] = response.data[countryName];
+
+          let previousDay: {
             confirmed: number;
             date: string;
             deaths: number;
             recovered: number;
           };
-          cTimeseries[newProp].forEach((v: any, i: any) => {
-            if (!prevDay) {
-              prevDay = v;
-            } else {
-              v.diffConfirmed = v.confirmed - prevDay.confirmed;
-              v.diffDeaths = v.deaths - prevDay.deaths;
-              v.diffRecovered = v.recovered - prevDay.recovered;
-              prevDay = { ...v };
+
+          countriesDailyStatsMap[newCountryName].forEach(
+            (item: any, index: any) => {
+              if (!previousDay) {
+                previousDay = item;
+              } else {
+                item.diffConfirmed = item.confirmed - previousDay.confirmed;
+                item.diffDeaths = item.deaths - previousDay.deaths;
+                item.diffRecovered = item.recovered - previousDay.recovered;
+                previousDay = { ...item };
+              }
             }
-          });
+          );
         }
       }
-      timeseries = cTimeseries;
-      return cTimeseries;
+      _countriesDailyStatsMap = countriesDailyStatsMap;
+      return countriesDailyStatsMap;
     })
     .catch((error: Error) => {
       console.log(error);
@@ -194,44 +177,33 @@ const fallbackCountries = (response: any) => {
 
 const applyFallback = false;
 const countriesUrl = applyFallback
-  ? resources.vtcountries
+  ? resources.allCountriesTotals
   : resources.countries;
 
-const getWorldData = () =>
+const getWorldStatistics = () =>
   axios
     .all([
-      axios.get(resources.scmp),
+      axios.get(resources.virusCases),
       axios.get(countriesUrl),
       axios.get(resources.allStats),
     ])
     .then((responseArr: any) => {
-      const scmpResponse = responseArr[0];
+      const virusCasesResponse = responseArr[0];
       const countriesResponse = applyFallback
         ? fallbackCountries(responseArr[1])
         : responseArr[1];
-      const stats = responseArr[2];
+      const allStatsResponse = responseArr[2];
       const tempMap: any = {};
 
-      countriesResponse.data.forEach(
-        (value: any, index: number, array: any) => {
-          switch (value.country) {
-            case "Mainland China":
-              value.country = "China";
-            case "US":
-            case "USA":
-              value.country = "United States";
-              break;
-          }
-          if (value.country.indexOf("*") !== -1) {
-            value.country = value.country.split("*").join("");
-          }
-          if (!tempMap[value.country]) {
-            tempMap[value.country] = value;
-          }
+      countriesResponse.data.forEach((item: any, index: number, array: any) => {
+        item.country = utils.countryNameAlign(item.country);
+        if (!tempMap[item.country]) {
+          tempMap[item.country] = item;
         }
-      );
+      });
 
-      let countries = (scmpResponse.data && scmpResponse.data.entries) || [];
+      let countries =
+        (virusCasesResponse.data && virusCasesResponse.data.entries) || [];
 
       // Sort countries
       countries = countries.sort((a: any, b: any) =>
@@ -247,76 +219,69 @@ const getWorldData = () =>
         critical: 0,
         todayCases: 0,
         todayDeaths: 0,
-        unresolved: stats.data.cases - stats.data.deaths - stats.data.recovered,
+        unresolved:
+          allStatsResponse.data.cases -
+          allStatsResponse.data.deaths -
+          allStatsResponse.data.recovered,
       };
 
-      countries.forEach((value: any, index: number, array: any) => {
-        switch (value.country) {
-          case "Mainland China":
-            value.country = "China";
-            break;
-          case "US":
-          case "USA":
-            value.country = "United States";
-            break;
-        }
-        if (value.country.indexOf("*") !== -1) {
-          value.country = value.country.split("*").join("");
-        }
+      countries.forEach((item: any, index: number, array: any) => {
+        item.country = utils.countryNameAlign(item.country);
+        item.casesPerOneMillion = -1;
+        item.critical = -1;
+        item.active = -1;
 
-        value.casesPerOneMillion = -1;
-        value.critical = -1;
-        value.active = -1;
+        if (tempMap[item.country]) {
+          item.casesPerOneMillion = tempMap[item.country].casesPerOneMillion;
+          item.critical = tempMap[item.country].critical;
+          item.active = tempMap[item.country].active;
 
-        if (tempMap[value.country]) {
-          value.casesPerOneMillion = tempMap[value.country].casesPerOneMillion;
-          value.critical = tempMap[value.country].critical;
-          value.active = tempMap[value.country].active;
-          extraStats.active += tempMap[value.country].active || 0;
-          extraStats.critical += tempMap[value.country].critical || 0;
-          extraStats.todayCases += tempMap[value.country].todayCases || 0;
-          extraStats.todayDeaths += tempMap[value.country].todayDeaths || 0;
+          // Sum
+          extraStats.active += tempMap[item.country].active || 0;
+          extraStats.critical += tempMap[item.country].critical || 0;
+          extraStats.todayCases += tempMap[item.country].todayCases || 0;
+          extraStats.todayDeaths += tempMap[item.country].todayDeaths || 0;
         }
 
-        value.cases = utils.parseCommaNumber(value.cases);
-        value.deaths = utils.parseCommaNumber(value.deaths);
-        value.recovered = utils.parseCommaNumber(value.recovered);
-        value.unresolved = value.cases - value.deaths - value.recovered;
-        value.fatalityRate =
-          value.cases >= 0 && value.deaths >= 0
-            ? Number(((value.deaths / value.cases) * 100).toFixed(2))
+        item.cases = utils.parseCommaNumber(item.cases);
+        item.deaths = utils.parseCommaNumber(item.deaths);
+        item.recovered = utils.parseCommaNumber(item.recovered);
+        item.unresolved = item.cases - item.deaths - item.recovered;
+        item.fatalityRate =
+          item.cases >= 0 && item.deaths >= 0
+            ? Number(((item.deaths / item.cases) * 100).toFixed(2))
             : null;
 
-        extraStats.countriesImpacted += value.cases > 0 ? 1 : 0;
-        extraStats.countriesDeaths += value.deaths > 0 ? 1 : 0;
+        extraStats.countriesImpacted += item.cases > 0 ? 1 : 0;
+        extraStats.countriesDeaths += item.deaths > 0 ? 1 : 0;
 
-        value.flag = flag(value.country);
-        value.code = code(value.country);
+        item.flag = flag(item.country);
+        item.code = code(item.country);
 
-        setRoute("/api/country/" + value.code, () => {
+        setRoute("/api/country/" + item.code, () => {
           return {
-            ac: countriesAutocomplete,
-            timeseries: timeseries[value.country] || [],
-            ...value,
+            ac: _countriesAutocomplete,
+            timeseries: _countriesDailyStatsMap[item.country] || [],
+            ...item,
           };
         });
 
-        const f = countriesAutocomplete.find(
-          (item: any) => item.data == value.code
+        const f = _countriesAutocomplete.find(
+          (item: any) => item.data == item.code
         );
 
         if (!f) {
-          countriesAutocomplete.push({
-            data: value.code,
-            value: `${value.flag} ${value.country}`,
+          _countriesAutocomplete.push({
+            data: item.code,
+            value: `${item.flag} ${item.country}`,
           });
         }
 
         const continent =
-          value.continent.charAt(0).toUpperCase() + value.continent.slice(1);
+          item.continent.charAt(0).toUpperCase() + item.continent.slice(1);
 
-        if (!continents[continent]) {
-          continents[continent] = {
+        if (!_continents[continent]) {
+          _continents[continent] = {
             active: 0,
             cases: 0,
             critical: 0,
@@ -326,24 +291,24 @@ const getWorldData = () =>
             unresolved: 0,
           };
         }
-        continents[continent].cases += value.cases >= 0 ? value.cases : 0;
-        continents[continent].deaths += value.deaths >= 0 ? value.deaths : 0;
-        continents[continent].recovered +=
-          value.recovered >= 0 ? value.recovered : 0;
-        continents[continent].critical +=
-          value.critical >= 0 ? value.critical : 0;
-        continents[continent].active += value.active >= 0 ? value.active : 0;
-        continents[continent].unresolved +=
-          value.unresolved >= 0 ? value.unresolved : 0;
+        _continents[continent].cases += item.cases >= 0 ? item.cases : 0;
+        _continents[continent].deaths += item.deaths >= 0 ? item.deaths : 0;
+        _continents[continent].recovered +=
+          item.recovered >= 0 ? item.recovered : 0;
+        _continents[continent].critical +=
+          item.critical >= 0 ? item.critical : 0;
+        _continents[continent].active += item.active >= 0 ? item.active : 0;
+        _continents[continent].unresolved +=
+          item.unresolved >= 0 ? item.unresolved : 0;
       });
 
-      scmpResponse.data.stats = {
-        ...stats.data,
+      virusCasesResponse.data.stats = {
+        ...allStatsResponse.data,
         ...extraStats,
       };
-      scmpResponse.data.ac = countriesAutocomplete;
-      scmpResponse.data.continents = continents;
-      return scmpResponse.data;
+      virusCasesResponse.data.ac = _countriesAutocomplete;
+      virusCasesResponse.data.continents = _continents;
+      return virusCasesResponse.data;
     })
     .catch((error: Error) => {
       console.error(error);
@@ -352,13 +317,13 @@ const getWorldData = () =>
 /**
  * Set Routes
  */
-createCachableRoute(CacheConfig.WORLD, getWorldData);
-createCachableRoute(CacheConfig.TIMESERIES, getTimeseriesData);
+createCachableRoute(CacheConfig.WORLD, getWorldStatistics);
+createCachableRoute(CacheConfig.COUNTRIES_DAILY, getCountriesDailyStatistics);
 
 /**
  * Set Cron jobs
  */
-cron(CacheConfig.WORLD, getWorldData);
-cron(CacheConfig.TIMESERIES, getTimeseriesData);
+cron(CacheConfig.WORLD, getWorldStatistics);
+cron(CacheConfig.COUNTRIES_DAILY, getCountriesDailyStatistics);
 
 module.exports = router;

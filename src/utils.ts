@@ -10,6 +10,34 @@ const utils = {
   log: (text: string, icon: string) => {
     console.log(`${icon}  ${new Date().toString()} - ${text}`);
   },
+
+  countryNameAlign: (countryName: string) => {
+    let alignedCountryName;
+
+    switch (countryName) {
+      case "Czechia":
+        alignedCountryName = "Czech Republic";
+        break;
+      case "Korea, South":
+        alignedCountryName = "South Korea";
+        break;
+      case "Mainland China":
+        alignedCountryName = "China";
+        break;
+      case "US":
+      case "USA":
+        alignedCountryName = "United States";
+        break;
+      default:
+        alignedCountryName = countryName;
+    }
+
+    if (alignedCountryName.indexOf("*") !== -1) {
+      alignedCountryName = alignedCountryName.split("*").join("");
+    }
+
+    return alignedCountryName;
+  },
 };
 
 export default utils;
