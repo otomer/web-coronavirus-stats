@@ -5,9 +5,9 @@ const resources = {
   // The Virus Tracker API
   allCountriesTotals:
     "https://api.thevirustracker.com/free-api?countryTotals=ALL",
-  countryTimeline:
-    "https://api.thevirustracker.com/free-api?countryTimeline=IL",
   globalStats: "https://api.thevirustracker.com/free-api?global=stats",
+  countryTimeline: (countryCode: string) =>
+    `https://api.thevirustracker.com/free-api?countryTimeline=${countryCode}`,
 
   // Coronavirus-19-API
   //https://github.com/javieraviles/covidAPI

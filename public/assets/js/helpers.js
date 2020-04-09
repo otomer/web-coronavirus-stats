@@ -69,3 +69,16 @@ const convertDiffToTd = (diff, pos) => {
 
   return `<td class="${cls}">${txt}</td>`;
 };
+
+function getLang() {
+  // browser
+  if (navigator.languages !== undefined && navigator.languages.length) {
+    return navigator.languages[0];
+  }
+  return (
+    navigator.userLanguage ||
+    navigator.language ||
+    navigator.browserLanguage ||
+    navigator.systemLanguage
+  );
+}
