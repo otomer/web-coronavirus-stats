@@ -1,6 +1,6 @@
 $(document).ready(function () {
   window.pageData = {
-    country: {},
+    countryView: {},
     geoip: {},
     mostImpactedCountry: null,
     scmp: {},
@@ -25,7 +25,7 @@ $(document).ready(function () {
       })
       .then(() => {
         window.view.country({
-          country: pageData.country,
+          country: pageData.countryView,
           selectors: {
             countryIndicator,
             title,
@@ -38,17 +38,13 @@ $(document).ready(function () {
     $(".specific-row").show();
     $("#rowChartStacked").show();
 
-    $("body").on("map-selectRegion", function (event, countryCode) {
-      updateSelectedCountryCharts(pageData.scmpCountries[countryCode]);
-    });
-
-    fetchGeoip()
-      .catch((res) => handleGeoipFailure(res))
-      .then((res) => handleGeoipResponse(res, pageData))
+    fetchGeoIp()
+      .catch((res) => handleGeoIpFailure(res))
+      .then((res) => handleGeoIpResponse(res, pageData))
       .then(fetchWorld)
       .then((res) => handleWorldResponse(res, pageData))
-      .then(fetchTimeseries)
-      .then((res) => handleTimeseriesResponse(res, pageData))
+      .then(fetchCountriesDailyStats)
+      .then((res) => handleCountriesDailyStats(res, pageData))
       .then(() => {
         window.view.main({
           pageData,
@@ -66,20 +62,20 @@ Get World Data
 */
 const fetchWorld = () => $.getJSON("/api/world");
 
-const handleWorldResponse = (scmpResponse, pageData) => {
-  pageData.scmp = scmpResponse;
+const handleWorldResponse = (worldResponse, pageData) => {
+  pageData.scmp = worldResponse;
 };
 
 /*
 =================================
-Get Timeseries Data
+Get Countries Daily Statistics Data
 =================================
 */
-const fetchTimeseries = () =>
+const fetchCountriesDailyStats = () =>
   $.getJSON("https://pomber.github.io/covid19/timeseries.json");
 
-const handleTimeseriesResponse = (timeseriesResponse, pageData) => {
-  pageData.timeseries = timeseriesResponse;
+const handleCountriesDailyStats = (countriesDailyStatsResponse, pageData) => {
+  pageData.timeseries = countriesDailyStatsResponse;
 };
 
 /*
@@ -89,24 +85,24 @@ Get Country Data
 */
 const fetchCountry = (cc) => $.getJSON(`/api/country/${cc}`);
 const handleCountryResponse = (countryResponse, pageData) => {
-  pageData.country = countryResponse.data;
+  pageData.countryView = countryResponse.data;
 };
 /*
 =================================
 Get GeoIP Data
 =================================
 */
-const fetchGeoip = () =>
+const fetchGeoIp = () =>
   $.ajax({
     dataType: "json",
     timeout: 2000,
     url: "https://ipapi.co/json/",
   });
 
-const handleGeoipResponse = (geoipResponse, pageData) => {
-  pageData.geoip = geoipResponse;
+const handleGeoIpResponse = (geoIpResponse, pageData) => {
+  pageData.geoip = geoIpResponse;
 };
 
-const handleGeoipFailure = (err) => {
+const handleGeoIpFailure = (err) => {
   return { country_code: "US" };
 };

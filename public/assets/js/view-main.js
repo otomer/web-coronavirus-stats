@@ -64,17 +64,24 @@ Selected country charts
     );
   };
 
+  window.updateSelectedCountryCharts = updateSelectedCountryCharts;
   const init = (options) => {
     const pageData = options.pageData;
-    const timeseriesResponse = pageData.timeseries;
-
-    window.render.loaded();
+    const countriesDailyStats = pageData.timeseries;
     const mapByDate = {};
     const tillYesterdayCountryMap = {};
     const seriesCases = [];
     const seriesDeaths = [];
     const seriesRecovered = [];
     const seriesLabels = [];
+
+    window.render.loaded();
+
+    window.render.map({
+      id: "#world-map",
+      getCountryData: (countryCode) => pageData.scmpCountries[countryCode],
+      selectedRegion: () => pageData.geoip.country_code,
+    });
 
     window.render.counters([
       { title: "Today Deaths", value: pageData.scmp.stats.todayDeaths },
@@ -84,11 +91,11 @@ Selected country charts
       { title: "Cases", value: pageData.scmp.stats.cases },
     ]);
 
-    timeseriesResponse["United States"] = timeseriesResponse["US"];
-    delete timeseriesResponse["US"];
+    countriesDailyStats["United States"] = countriesDailyStats["US"];
+    delete countriesDailyStats["US"];
 
     //Iterate countries
-    for (let countryName in timeseriesResponse) {
+    for (let countryName in countriesDailyStats) {
       if (!tillYesterdayCountryMap[countryName]) {
         tillYesterdayCountryMap[countryName] = {
           cases: 0,
@@ -97,7 +104,7 @@ Selected country charts
         };
       }
 
-      const currentCountry = timeseriesResponse[countryName];
+      const currentCountry = countriesDailyStats[countryName];
 
       //Iterate days per country
       for (let dateKey in currentCountry) {
@@ -348,13 +355,13 @@ Selected country charts
       const cc3 = {};
 
       let i = 0;
-      for (let con in pageData.scmp.continents) {
+      for (let continentName in pageData.scmp.continents) {
         if (i < 3) {
-          cc1[con] = pageData.scmp.continents[con];
+          cc1[continentName] = pageData.scmp.continents[continentName];
         } else if (i < 6) {
-          cc2[con] = pageData.scmp.continents[con];
+          cc2[continentName] = pageData.scmp.continents[continentName];
         } else {
-          cc3[con] = pageData.scmp.continents[con];
+          cc3[continentName] = pageData.scmp.continents[continentName];
         }
         i++;
       }
