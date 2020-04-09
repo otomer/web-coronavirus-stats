@@ -12,7 +12,7 @@
     $("#rowChartStacked").hide();
 
     options.selectors.title.html(
-      `${country.country} Live Statistics (${country.continent})`
+      `${country.country} (${country.continent}) Live Statistics`
     );
     options.selectors.countryIndicator.html(`${country.flag}&nbsp;
         <div class="media-body align-self-center">
