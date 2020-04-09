@@ -227,6 +227,12 @@ const getWorldStatistics = () =>
 
       countries.forEach((item: any, index: number, array: any) => {
         item.country = utils.countryNameAlign(item.country);
+        if (item.country === "Chile") {
+          item.continent = "South America";
+        }
+        const continent =
+          item.continent.charAt(0).toUpperCase() + item.continent.slice(1);
+
         item.casesPerOneMillion = -1;
         item.critical = -1;
         item.active = -1;
@@ -276,9 +282,6 @@ const getWorldStatistics = () =>
             value: `${item.flag} ${item.country}`,
           });
         }
-
-        const continent =
-          item.continent.charAt(0).toUpperCase() + item.continent.slice(1);
 
         if (!_continents[continent]) {
           _continents[continent] = {

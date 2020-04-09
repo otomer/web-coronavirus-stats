@@ -11,7 +11,9 @@
 
     $("#rowChartStacked").hide();
 
-    options.selectors.title.html(`${country.country} Live Statistics`);
+    options.selectors.title.html(
+      `${country.country} Live Statistics (${country.continent})`
+    );
     options.selectors.countryIndicator.html(`${country.flag}&nbsp;
         <div class="media-body align-self-center">
           <h6>${country.country}</h6>
