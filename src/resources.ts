@@ -22,6 +22,9 @@ const resources = {
 
   //South China Morning Post
   virusCases: "https://interactive-static.scmp.com/sheet/wuhan/viruscases.json",
+
+  //Countries population
+  restCountriesAll: "https://restcountries.eu/rest/v2/all",
 };
 
 export default resources;

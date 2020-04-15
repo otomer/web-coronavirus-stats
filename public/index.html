@@ -33,11 +33,6 @@
     <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM STYLES -->
     <link href="plugins/apex/apexcharts.css" rel="stylesheet" type="text/css" />
     <link
-      href="assets/css/dashboard/dash_2.css"
-      rel="stylesheet"
-      type="text/css"
-    />
-    <link
       href="assets/css/widgets/modules-widgets.css"
       rel="stylesheet"
       type="text/css"
@@ -66,10 +61,6 @@
     />
     <!-- END PAGE LEVEL STYLES -->
     <style>
-      .loader {
-        background: #060818;
-        text-align: center;
-      }
       .jvectormap-container {
         border-radius: 14px;
         padding: 20px 0;
@@ -118,12 +109,6 @@
 
       gtag("config", "UA-16934508-17");
     </script>
-    <!-- Google Adsense -->
-    <script
-      async
-      data-ad-client="ca-pub-2099769833290489"
-      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
-    ></script>
   </head>
   <body class="alt-menu sidebar-noneoverflow">
     <!--  BEGIN NAVBAR  -->
@@ -292,6 +277,55 @@ L82,35.7z"
           <ul class="navbar-nav theme-brand flex-row text-center">
             <li class="nav-item theme-text">
               <a class="nav-link" href="/"> Coronavirus </a>
+            </li>
+          </ul>
+          <ul class="list-unstyled menu-categories" id="topAccordion">
+            <li class="menu single-menu active">
+              <a aria-expanded="true" href="/">
+                <div class="">
+                  <svg
+                    class="feather feather-home"
+                    fill="none"
+                    height="24"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"
+                    ></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                  </svg>
+                  <span>Home</span>
+                </div>
+              </a>
+            </li>
+
+            <li class="menu single-menu">
+              <a aria-expanded="false" href="race.html">
+                <div class="">
+                  <svg
+                    class="feather feather-play-circle"
+                    fill="none"
+                    height="24"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polygon points="10 8 16 12 10 16 10 8"></polygon>
+                  </svg>
+                  <span>Race Chart</span>
+                </div>
+              </a>
             </li>
           </ul>
         </nav>
@@ -681,8 +715,11 @@ L82,35.7z"
                       <tr>
                         <th>Date</th>
                         <th>Confirmed</th>
+                        <th></th>
                         <th>Deaths</th>
+                        <th></th>
                         <th>Recovered</th>
+                        <th></th>
                       </tr>
                     </tfoot>
                   </table>

@@ -106,7 +106,7 @@
       const d = new Date(v.date);
       tableRows += `
           <tr>
-            <td>${d.toLocaleDateString(getLang())}</td>
+            <td>${v.date}</td>
             <td>${v.confirmed}</td>
             ${convertDiffToTd(v.diffConfirmed)}
             <td>${v.deaths}</td>

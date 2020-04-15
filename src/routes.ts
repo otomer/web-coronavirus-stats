@@ -38,12 +38,19 @@ const createCachableRoute = (config: any, cb: any) =>
 const _countriesAutocomplete: any = [];
 const _continents: any = {};
 let _countriesDailyStatsMap: any = {};
+let _countriesRace: any = {};
 
-const CacheConfig = {
+const RoutesConfig = {
   COUNTRIES_DAILY: {
     key: "/api/countries",
     maxFactor: 2,
     refreshMilliseconds: 1000 * 30 * 60, //30 minutes
+  },
+  COUNTRY: {
+    key: "/api/country/",
+  },
+  RACE_CHART: {
+    key: "/api/race",
   },
   WORLD: {
     key: "/api/world",
@@ -58,9 +65,23 @@ const CacheConfig = {
 
 const getCountriesDailyStatistics = () =>
   axios
-    .get(resources.countriesDailyStatistics)
-    .then((response: any) => {
+    .all([
+      axios.get(resources.countriesDailyStatistics),
+      axios.get(resources.restCountriesAll),
+    ])
+    .then((responseArr: any) => {
+      const response = responseArr[0];
+      const countriesPopulation = responseArr[1].data;
       const countriesDailyStatsMap: any = {};
+      const populationMap: any = {};
+
+      countriesPopulation.forEach((item: any) => {
+        const cn = utils.countryNameAlign(item.name);
+        populationMap[cn] = {
+          flagUrl: item.flag,
+          population: item.population,
+        };
+      });
 
       for (var countryName in response.data) {
         if (response.data.hasOwnProperty(countryName)) {
@@ -74,8 +95,41 @@ const getCountriesDailyStatistics = () =>
             recovered: number;
           };
 
+          let hasValidPopulation = false;
+          if (populationMap[newCountryName]) {
+            if (populationMap[newCountryName].population >= 1000000) {
+              hasValidPopulation = true;
+            }
+            // else {
+            //   console.log(
+            //     `${newCountryName} - has only ${populationMap[newCountryName].population} population`
+            //   );
+            // }
+          } else {
+            // console.log(`${newCountryName} - No population item`);
+          }
+
           countriesDailyStatsMap[newCountryName].forEach(
             (item: any, index: any) => {
+              const currDateString = new Date(item.date).toLocaleDateString();
+              if (!_countriesRace[currDateString]) {
+                _countriesRace[currDateString] = [];
+              }
+
+              if (item.deaths >= 0 && hasValidPopulation) {
+                let raceVal: number =
+                  (item.deaths / populationMap[newCountryName].population) *
+                  1000000;
+                raceVal = parseFloat(raceVal.toFixed(2));
+
+                _countriesRace[currDateString].push({
+                  // bullet: `https://www.amcharts.com/wp-content/uploads/flags/${newCountryName.toLowerCase()}.svg`,
+                  // bullet: populationMap[newCountryName].flagUrl,
+                  countryCategory: newCountryName,
+                  countryValue: raceVal,
+                });
+              }
+
               if (!previousDay) {
                 previousDay = item;
               } else {
@@ -88,6 +142,12 @@ const getCountriesDailyStatistics = () =>
           );
         }
       }
+
+      setRoute(RoutesConfig.RACE_CHART.key, () => ({
+        ac: _countriesAutocomplete,
+        race: _countriesRace,
+      }));
+
       _countriesDailyStatsMap = countriesDailyStatsMap;
       return countriesDailyStatsMap;
     })
@@ -264,13 +324,11 @@ const getWorldStatistics = () =>
         item.flag = flag(item.country);
         item.code = code(item.country);
 
-        setRoute("/api/country/" + item.code, () => {
-          return {
-            ac: _countriesAutocomplete,
-            timeseries: _countriesDailyStatsMap[item.country] || [],
-            ...item,
-          };
-        });
+        setRoute(`${RoutesConfig.COUNTRY.key}${item.code}`, () => ({
+          ac: _countriesAutocomplete,
+          timeseries: _countriesDailyStatsMap[item.country] || [],
+          ...item,
+        }));
 
         const f = _countriesAutocomplete.find(
           (item: any) => item.data == item.code
@@ -320,13 +378,13 @@ const getWorldStatistics = () =>
 /**
  * Set Routes
  */
-createCachableRoute(CacheConfig.WORLD, getWorldStatistics);
-createCachableRoute(CacheConfig.COUNTRIES_DAILY, getCountriesDailyStatistics);
+createCachableRoute(RoutesConfig.WORLD, getWorldStatistics);
+createCachableRoute(RoutesConfig.COUNTRIES_DAILY, getCountriesDailyStatistics);
 
 /**
  * Set Cron jobs
  */
-cron(CacheConfig.WORLD, getWorldStatistics);
-cron(CacheConfig.COUNTRIES_DAILY, getCountriesDailyStatistics);
+cron(RoutesConfig.WORLD, getWorldStatistics);
+cron(RoutesConfig.COUNTRIES_DAILY, getCountriesDailyStatistics);
 
 module.exports = router;
