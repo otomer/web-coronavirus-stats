@@ -9,7 +9,6 @@ $(function () {
       });
 
       initRaceChart(raceResponse.data.race);
-      window.render.loaded();
     };
 
     fetchRace()
@@ -219,4 +218,5 @@ const initRaceChart = (allData) => {
       playButton.isActive = true; // this          starts interval
     }, 2000);
   });
+  setTimeout(() => window.render.loaded(), 1000);
 };
