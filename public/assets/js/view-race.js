@@ -20,6 +20,7 @@ $(function () {
 });
 
 const initRaceChart = (allData) => {
+  window.render.loaded();
   var startDateString = "2020-01-22";
   var startDate = new Date(startDateString);
   var maxDate = new Date();
@@ -218,5 +219,4 @@ const initRaceChart = (allData) => {
       playButton.isActive = true; // this          starts interval
     }, 2000);
   });
-  setTimeout(() => window.render.loaded(), 1000);
 };
