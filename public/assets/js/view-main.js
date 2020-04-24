@@ -84,8 +84,8 @@ Selected country charts
     });
 
     window.render.counters([
-      { title: "Today Deaths", value: pageData.scmp.stats.todayDeaths },
-      { title: "Today Cases", value: pageData.scmp.stats.todayCases },
+      { title: "Today's Deaths", value: pageData.scmp.stats.todayDeaths },
+      { title: "Today's Cases", value: pageData.scmp.stats.todayCases },
       { title: "Critical", value: pageData.scmp.stats.critical },
       { title: "Deaths", value: pageData.scmp.stats.deaths },
       { title: "Cases", value: pageData.scmp.stats.cases },

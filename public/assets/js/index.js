@@ -60,7 +60,7 @@ $(document).ready(function () {
 Get World Data
 =================================
 */
-const fetchWorld = () => $.getJSON("/api/world");
+const fetchWorld = () => $.getJSON("/api/global");
 
 const handleWorldResponse = (worldResponse, pageData) => {
   pageData.scmp = worldResponse;
@@ -83,9 +83,10 @@ const handleCountriesDailyStats = (countriesDailyStatsResponse, pageData) => {
 Get Country Data
 =================================
 */
-const fetchCountry = (cc) => $.getJSON(`/api/country/${cc}`);
+const fetchCountry = (cc) => $.getJSON(`/api/single_country/${cc}`);
 const handleCountryResponse = (countryResponse, pageData) => {
-  pageData.countryView = countryResponse.data;
+  console.log(countryResponse);
+  pageData.countryView = countryResponse;
 };
 /*
 =================================

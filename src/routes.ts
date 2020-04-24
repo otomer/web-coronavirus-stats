@@ -18,10 +18,7 @@ const router = express.Router();
  */
 const setRoute = (path: string, data: Function) =>
   router.get(path, (req: Request, res: Response) =>
-    res.status(200).send({
-      data: data(),
-      success: true,
-    })
+    res.status(200).send(data())
   );
 
 const createCachableRoute = (config: any, cb: any) =>
@@ -47,13 +44,13 @@ const RoutesConfig = {
     refreshMilliseconds: 1000 * 30 * 60, //30 minutes
   },
   COUNTRY: {
-    key: "/api/country/",
+    key: "/api/single_country/",
   },
   RACE_CHART: {
-    key: "/api/race",
+    key: "/api/countries_race",
   },
   WORLD: {
-    key: "/api/world",
+    key: "/api/global",
     maxFactor: 2,
     refreshMilliseconds: 1000 * 30 * 60, //30 minutes
   },
@@ -125,8 +122,8 @@ const getCountriesDailyStatistics = () =>
                 _countriesRace[currDateString].push({
                   // bullet: `https://www.amcharts.com/wp-content/uploads/flags/${newCountryName.toLowerCase()}.svg`,
                   // bullet: populationMap[newCountryName].flagUrl,
-                  countryCategory: newCountryName,
-                  countryValue: raceVal,
+                  cat: newCountryName,
+                  val: raceVal,
                 });
               }
 

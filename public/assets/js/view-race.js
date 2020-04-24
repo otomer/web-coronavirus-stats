@@ -1,14 +1,14 @@
 $(function () {
   am4core.ready(function () {
-    const fetchRace = (cc) => $.getJSON(`/api/race`);
+    const fetchRace = (cc) => $.getJSON(`/api/countries_race`);
     const handleRaceResponse = (raceResponse) => {
       window.render.autocomplete({
         id: "#autocomplete-dynamic",
-        lookup: raceResponse.data.ac,
+        lookup: raceResponse.ac,
         onEnter: (text) => countriesModule.code(text),
       });
 
-      initRaceChart(raceResponse.data.race);
+      initRaceChart(raceResponse.race);
     };
 
     fetchRace()
@@ -66,7 +66,7 @@ const initRaceChart = (allData) => {
 
   var categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
   categoryAxis.renderer.grid.template.location = 0;
-  categoryAxis.dataFields.category = "countryCategory";
+  categoryAxis.dataFields.category = "cat";
   categoryAxis.renderer.minGridDistance = 1;
   categoryAxis.renderer.inversed = true;
   categoryAxis.renderer.grid.template.disabled = true;
@@ -113,8 +113,8 @@ const initRaceChart = (allData) => {
   // valueAxis.renderer.labels.template.disabled = true;
 
   var series = chart.series.push(new am4charts.ColumnSeries());
-  series.dataFields.categoryY = "countryCategory";
-  series.dataFields.valueX = "countryValue";
+  series.dataFields.categoryY = "cat";
+  series.dataFields.valueX = "val";
   series.tooltipText = "{valueX.value}";
   series.columns.template.strokeOpacity = 0;
   series.columns.template.column.cornerRadiusBottomRight = 5;
@@ -178,8 +178,8 @@ const initRaceChart = (allData) => {
     var newData = allData[dateString];
     var itemsWithNonZero = 0;
     for (var i = 0; i < chart.data.length; i++) {
-      chart.data[i].countryValue = newData[i].countryValue;
-      if (chart.data[i].countryValue > 0) {
+      chart.data[i].val = newData[i].val;
+      if (chart.data[i].val > 0) {
         itemsWithNonZero++;
       }
     }
